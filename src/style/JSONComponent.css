@@ -1,0 +1,10 @@
+.json-alert {
+  min-width: 100%;
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
+.json-raw-format {
+  font-size: 0.6rem;
+  max-width: 100%;
+}

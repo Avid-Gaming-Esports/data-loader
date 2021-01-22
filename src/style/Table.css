@@ -1,0 +1,47 @@
+.center {
+  text-align: center;
+}
+
+.blue-header {
+  background-color: #a3cfec;
+}
+
+.blue-cell {
+  background-color: #ecf2ff;
+}
+
+.red-header {
+  background-color: #e2b6b3;
+}
+
+.red-cell {
+  background-color: #ffe8e7;
+}
+
+.img-wrapper{
+  padding: 6px !important;
+}
+
+.loader-pos {
+  width: 100px;
+}
+
+.loader-pick {
+  width: 100px;
+}
+
+.loader-kda {
+  width: 120px;
+}
+
+.loader-cs {
+  width: 80px;
+}
+
+.loader-gold {
+  width: 100px;
+}
+
+.loader-ban {
+  width: 100px;
+}
