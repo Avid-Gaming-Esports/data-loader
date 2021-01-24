@@ -3,8 +3,24 @@
   flex-direction: row;
   padding: 1% 0% 1% 1%;
   margin-bottom: 0rem;
+  flex-wrap: wrap;
 }
 
 .radio-option {
   margin-left: 1rem;
+}
+
+.group-by {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: none;
+  border: none;
+}
+
+.group-by-expander {
+  border: none;
+  cursor: pointer;
+  text-align: right;
+  background: none;
 }

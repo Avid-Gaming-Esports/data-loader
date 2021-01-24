@@ -9,13 +9,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 import App from './App';
-import reducer from "./store/reducer"
+import rootReducer, { RootState } from "./store/rootReducer";
 
 import reportWebVitals from './reportWebVitals';
 
-const store: Store<gameState, updateAction> & {
+const store: Store<RootState, updateAction | updateOpt> & {
   dispatch: DispatchType
-} = createStore(reducer, applyMiddleware(thunk))
+} = createStore(rootReducer, applyMiddleware(thunk))
 
 ReactDOM.render(
   <Provider store={store}>

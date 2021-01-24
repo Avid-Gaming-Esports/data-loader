@@ -19,6 +19,9 @@ type gameState = {
   red: PlayerData[],
   raw: string,
   onView?: boolean,
+}
+
+type optState = {
   preset?: string[],
   outputTypes?: {[key: string] : boolean}
 }
@@ -28,12 +31,21 @@ type updateAction = {
   payload: gameData
 }
 
+type updateOpt = {
+  type: string
+  payload: optState
+}
+
 type gameData = {
   type: string,
   red?: PlayerData[],
   blue?: PlayerData[],
   raw?: object,
   onView?: boolean,
+}
+
+type optData = {
+  type: string,
   preset?: string[],
   outputTypes?: {[key: string] : boolean}
 }
@@ -86,7 +98,6 @@ type Stats = {
   neutralMinionsKilledEnemyJungle: number,
   neutralMinionsKilledTeamJungle: number,
   objectivePlayerScore: number,
-  participantId: number,
   pentaKills: number,
   perk0: number,
   perk0Var1: number,
@@ -162,7 +173,6 @@ type Timeline = {
   damageTakenPerMinDeltas: Object,
   goldPerMinDeltas: Object,
   lane: string,
-  participantId: number,
   role: string,
   xpDiffPerMinDeltas: Object,
   xpPerMinDeltas: Object

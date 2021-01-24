@@ -14,14 +14,21 @@ export function updateScreen(raw: gameState) {
   }
 }
 
-export function changePreset(raw: gameState) {
+export function changePreset(raw: optState) {
   return {
     type: actionTypes.UPDATE_PRESET,
     payload: raw
   }
 }
 
-export function toggleOutput(raw: gameState) {
+export function changeSelectors(raw: optState) {
+  return {
+    type: actionTypes.UPDATE_PRESET,
+    payload: raw
+  }
+}
+
+export function toggleOutput(raw: optState) {
   return {
     type: actionTypes.UPDATE_OUTPUT,
     payload: raw

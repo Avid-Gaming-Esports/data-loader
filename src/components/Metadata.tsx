@@ -10,9 +10,6 @@ function Metadata() {
       <Accordion.Toggle as={Card.Header} eventKey="1">
         Metadata Options
       </Accordion.Toggle>
-      {/* <Accordion.Collapse eventKey="1">
-        <Card.Body>Hello! I'm another body</Card.Body>
-      </Accordion.Collapse> */}
     </Card>
   </Accordion>
   );

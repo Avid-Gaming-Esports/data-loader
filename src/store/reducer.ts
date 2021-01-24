@@ -1,5 +1,4 @@
-import * as actionTypes from "./actionTypes"
-import { Constants } from '../components/Constants';
+import * as actionTypes from "./actionTypes";
 
 const pHStats: Stats = {
   assists: 0,
@@ -39,7 +38,6 @@ const pHStats: Stats = {
   neutralMinionsKilledEnemyJungle: 0,
   neutralMinionsKilledTeamJungle: 0,
   objectivePlayerScore: 0,
-  participantId: 6,
   pentaKills: 0,
   perk0: 8010,
   perk0Var1: 375,
@@ -115,7 +113,6 @@ const pHTimeline: Timeline = {
   damageTakenPerMinDeltas: Object,
   goldPerMinDeltas: Object,
   lane: "NONE",
-  participantId: 6,
   role: "NONE",
   xpDiffPerMinDeltas: Object,
   xpPerMinDeltas: Object
@@ -205,13 +202,7 @@ const initialState: gameState = {
     teamId: 100
   }],
   raw: JSON.stringify(""),
-  onView: false,
-  preset: Constants.PRESET_ARRAYS["advanced"],
-  outputTypes: {
-    "JSON": true,
-    "CSV": true,
-    "CSV-Headless": true
-  }
+  onView: false
 }
 
 const reducer = (
@@ -240,16 +231,16 @@ const reducer = (
         ...state,
         onView: action.payload.onView,
       }
-    case actionTypes.UPDATE_PRESET:
-      return {
-        ...state,
-        preset: action.payload.preset,
-      }
-    case actionTypes.UPDATE_OUTPUT:
-      return {
-        ...state,
-        outputTypes: action.payload.outputTypes
-      }
+    // case actionTypes.UPDATE_PRESET:
+    //   return {
+    //     ...state,
+    //     preset: action.payload.preset,
+    //   }
+    // case actionTypes.UPDATE_OUTPUT:
+    //   return {
+    //     ...state,
+    //     outputTypes: action.payload.outputTypes
+    //   }
   }
   return state;
 }

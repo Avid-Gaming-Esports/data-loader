@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dispatch } from "redux"
 import { useDispatch, useSelector } from "react-redux"
 import { Accordion, Card, Form } from 'react-bootstrap';
 
 import { Constants } from './Constants';
+
+import { RootState } from "../store/rootReducer";
 
 import '../style/Selector.css';
 
@@ -11,36 +13,55 @@ import { changePreset, toggleOutput } from '../store/actionCreators';
 
 function handleChangePreset(dispatch: Dispatch<any>, target: string) {
   dispatch(changePreset({
-    blue: [],
-    red: [],
-    raw: "",
-    preset: Constants.PRESET_ARRAYS[target],
+    preset: Constants.PRESET_ARRAYS[target]
   }))
 }
 
-function handleToggleOutput(store: gameState, dispatch: Dispatch<any>, target: string) {
+function handleChangeSelectors(dispatch: Dispatch<any>, target: string[] | undefined) {
+  dispatch(changePreset({
+    preset: target
+  }))
+}
+
+function handleToggleOutput(store: optState, dispatch: Dispatch<any>, target: string) {
   let outputDict: {[key: string] : boolean} | undefined = 
   store.outputTypes;
   if(outputDict) {
-  outputDict[target] = !outputDict[target]
+    outputDict[target] = !outputDict[target]
   }
   dispatch(toggleOutput({
-    blue: [],
-    red: [],
-    raw: "",
     outputTypes: outputDict
   }))
 }
 
 function Selector() {
   const dispatch: Dispatch<any> = useDispatch();
-  const store = useSelector((state: gameState) => state);
+  const store = useSelector((state: RootState) => state.opt);
+  const [outputExpander, setOutputExpander] = useState("+");
+  const [statExpander, setStatExpander] = useState("+");
+  console.log(store.preset);
+  console.log(Constants.PRESET_ARRAYS["stats"].filter((key) => 
+    store.preset?.includes(key)).length);
   return (
   <Accordion className="metadata">
     <Card>
-      <Accordion.Toggle as={Card.Header} eventKey="1">
-        Output &amp; Presets +
-      </Accordion.Toggle>
+      <Accordion as={Card.Header}>
+      <Card className="group-by">
+        Output &amp; Presets
+        <Accordion.Toggle 
+        as={Card} 
+        eventKey="1" 
+        className="group-by-expander"
+        onClick={(_e) => {
+            if (outputExpander === "+"){
+              setOutputExpander("-");
+            } else {
+              setOutputExpander("+");
+            }
+          }}>
+            {outputExpander}
+        </Accordion.Toggle>
+      </Card>
       <Accordion.Collapse eventKey="1">
       <div>
       <Form.Group className="radios">
@@ -125,25 +146,73 @@ function Selector() {
       </Form.Group>
       </div>
       </Accordion.Collapse>
+      </Accordion>
     </Card>
     <Card>
-      <Accordion.Toggle as={Card.Header} eventKey="2">
-        <Form.Check
-          type="checkbox"
-          label="Stats +"
-          name="outputOption"
-          id="outputOption3"
-          defaultChecked
-          onChange={(_e) => { 
-            console.log("Nostats");
-          }}
-        />
-      </Accordion.Toggle>
-      <Accordion.Collapse eventKey="2" >
-      <div>
-        ASDFASDFSAFD
-      </div>
-      </Accordion.Collapse>
+      <Accordion as={Card.Header}>
+        <Card className="group-by">
+          <Form.Check
+            type="checkbox"
+            label="Stats"
+            name="statMasterOption"
+            id="statsMaster"
+            checked={(Constants.PRESET_ARRAYS["stats"].filter(value => 
+              store.preset?.includes(value)
+            ).length > 0)}
+            onChange={(e) => { 
+              if (Constants.PRESET_ARRAYS["stats"].filter(value => 
+                store.preset?.includes(value)
+              ).length > 0) {
+                let newPreset : string[] | undefined = store.preset?.filter(value => 
+                  !Constants.PRESET_ARRAYS["stats"].includes(value)
+                )
+                handleChangeSelectors(dispatch, newPreset);
+              } else {
+                let newPreset : string[] | undefined = Constants.PRESET_ARRAYS["stats"].filter(value => 
+                  !store.preset?.includes(value)
+                )
+                if (store.preset) {
+                  newPreset = store.preset.concat(newPreset);
+                }
+                handleChangeSelectors(dispatch, newPreset);
+              }
+            }}
+          />
+          <Accordion.Toggle 
+          as={Card} 
+          eventKey="2" 
+          className="group-by-expander"
+          onClick={(_e) => {
+            if (statExpander === "+"){
+              setStatExpander("-");
+            } else {
+              setStatExpander("+");
+            }
+          }}>
+              {statExpander}
+          </Accordion.Toggle>
+        </Card>
+        <Accordion.Collapse eventKey="2" >
+        <div>
+        <Form.Group className="radios">
+          {Constants.PRESET_ARRAYS["stats"].map((key, val) => {
+            return (
+              <Form.Check
+                type="checkbox"
+                label={key}
+                name="statsOption"
+                id={"statsOption" + val.toString()}
+                key={val}
+                className="radio-option"
+                checked={store.preset?.includes(key)}
+                onChange={(_e) => {
+                }}
+              />)
+          })}
+          </Form.Group>
+        </div>
+        </Accordion.Collapse>
+      </Accordion>
     </Card>
   </Accordion>
   );

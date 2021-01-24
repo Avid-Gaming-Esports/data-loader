@@ -11,6 +11,8 @@ import { useSelector } from "react-redux"
 // import bot from'../img/Position_Challenger-Bot.png';
 // import supp from'../img/Position_Challenger-Support.png';
 
+import { RootState } from "../store/rootReducer";
+
 import '../style/Table.css';
 
 type TableProps = {
@@ -129,7 +131,7 @@ function Table({side} : TableProps) {
   // })
   // console.log(dd.data.champions());
   // console.log(json);
-  const blueData: blueData[] = useSelector((state: gameState) => state.blue)
+  const blueData: blueData[] = useSelector((state: RootState) => state.main.blue)
     .map((Player: PlayerData) => {
     return {
       bid: Player.participantId.toString(), 
@@ -142,7 +144,7 @@ function Table({side} : TableProps) {
       bgold: Player.stats.goldEarned.toString()
     }
   });
-  const redData: redData[] = useSelector((state: gameState) => state.red)
+  const redData: redData[] = useSelector((state: RootState) => state.main.red)
     .map((Player: PlayerData) => {
       console.log(Player.championId)
     return {

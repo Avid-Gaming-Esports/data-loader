@@ -2,6 +2,8 @@ import React from 'react';
 import { Alert } from 'react-bootstrap';
 import { useSelector } from "react-redux"
 
+import { RootState } from "../store/rootReducer";
+
 import '../style/CSVComponent.css';
 
 interface CSVProps {
@@ -49,8 +51,9 @@ function formatHeader(value: PlayerData, sub: string[]) {
 }
 
 function CSVComponent(props: CSVProps) {
-  const didLoad = useSelector((state: gameState) => state);
-  const preset = didLoad.preset;
+  const didLoad = useSelector((state: RootState) => state.main);
+  const opt = useSelector((state: RootState) => state.opt);
+  const preset = opt.preset;
   console.log(preset);
   return (
     <Alert show={true} variant="dark" className="csv-alert">

@@ -14,6 +14,8 @@ import Selector from './Selector';
 import JSONComponent from './JSONComponent';
 import CSVComponent from './CSVComponent';
 
+import { RootState } from "../store/rootReducer";
+
 import { updateScreen } from '../store/actionCreators';
 
 function renderOutputTypes(target: string, component: JSX.Element, outputArr?: {[key: string] : boolean}) {
@@ -22,19 +24,19 @@ function renderOutputTypes(target: string, component: JSX.Element, outputArr?: {
 
 function View() {
   const dispatch: Dispatch<any> = useDispatch();
-  const didLoad = useSelector((state: gameState) => state);
-  console.log(didLoad);
+  const didLoad = useSelector((state: RootState) => state.main);
+  const opt = useSelector((state: RootState) => state.opt);
   return (
     <Container>
         {didLoad.onView ? 
         (<div className="main-view">
           <Selector />
           {renderOutputTypes("JSON", 
-            <JSONComponent />, didLoad.outputTypes)}
+            <JSONComponent />, opt.outputTypes)}
           {renderOutputTypes("CSV", 
-            <CSVComponent headless={false} />, didLoad.outputTypes)}
+            <CSVComponent headless={false} />, opt.outputTypes)}
           {renderOutputTypes("CSV-Headless", 
-            <CSVComponent headless={true} />, didLoad.outputTypes)}
+            <CSVComponent headless={true} />, opt.outputTypes)}
         </div>) : 
         (<div className="main-view">
         <Search />
