@@ -23,7 +23,8 @@ type gameState = {
 
 type optState = {
   preset?: string[],
-  outputTypes?: {[key: string] : boolean}
+  outputTypes?: {[key: string] : boolean},
+  statOpt?: {[key: string] : boolean}[]
 }
 
 type updateAction = {

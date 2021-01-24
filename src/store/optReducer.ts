@@ -7,7 +7,31 @@ const initialState: optState = {
     "JSON": true,
     "CSV": true,
     "CSV-Headless": true
-  }
+  },
+  statOpt: [{"win": false}, {"item0": false}, {"item1": false}, {"item2": false}, {"item3": false}, 
+  {"item4": false}, {"item5": false}, {"item6": false}, {"kills": false}, {"deaths": false}, 
+  {"assists": false}, {"largestKillingSpree": false}, {"largestMultiKill": false}, {"killingSprees": false}, 
+  {"longestTimeSpentLiving": false}, {"doubleKills": false}, {"tripleKills": false}, {"quadraKills": false}, 
+  {"pentaKills": false}, {"unrealKills": false}, {"totalDamageDealt": false}, {"magicDamageDealt": false}, 
+  {"physicalDamageDealt": false}, {"trueDamageDealt": false}, {"largestCriticalStrike": false}, 
+  {"totalDamageDealtToChampions": false}, {"magicDamageDealtToChampions": false}, {"physicalDamageDealtToChampions": false}, 
+  {"trueDamageDealtToChampions": false}, {"totalHeal": false}, {"totalUnitsHealed": false}, {"damageSelfMitigated": false}, 
+  {"damageDealtToObjectives": false}, {"damageDealtToTurrets": false}, {"visionScore": false}, {"timeCCingOthers": false}, 
+  {"totalDamageTaken": false}, {"magicalDamageTaken": false}, {"physicalDamageTaken": false}, {"trueDamageTaken": false}, 
+  {"goldEarned": false}, {"goldSpent": false}, {"turretKills": false}, {"inhibitorKills": false}, {"totalMinionsKilled": false}, 
+  {"neutralMinionsKilled": false}, {"neutralMinionsKilledTeamJungle": false}, {"neutralMinionsKilledEnemyJungle": false}, 
+  {"totalTimeCrowdControlDealt": false}, {"champLevel": false}, {"visionWardsBoughtInGame": false}, 
+  {"sightWardsBoughtInGame": false}, {"wardsPlaced": false}, {"wardsKilled": false}, {"firstBloodKill": false}, 
+  {"firstBloodAssist": false}, {"firstTowerKill": false}, {"firstTowerAssist": false}, {"firstInhibitorKill": false}, 
+  {"firstInhibitorAssist": false}, {"combatPlayerScore": false}, {"objectivePlayerScore": false}, {"totalPlayerScore": false}, 
+  {"totalScoreRank": false}, {"playerScore0": false}, {"playerScore1": false}, {"playerScore2": false}, {"playerScore3": false}, 
+  {"playerScore4": false}, {"playerScore5": false}, {"playerScore6": false}, {"playerScore7": false}, {"playerScore8": false}, 
+  {"playerScore9": false}, {"perk0": false}, {"perk0Var1": false}, {"perk0Var2": false}, {"perk0Var3": false}, {"perk1": false}, 
+  {"perk1Var1": false}, {"perk1Var2": false}, {"perk1Var3": false}, {"perk2": false}, {"perk2Var1": false}, {"perk2Var2": false}, 
+  {"perk2Var3": false}, {"perk3": false}, {"perk3Var1": false}, {"perk3Var2": false}, {"perk3Var3": false}, {"perk4": false}, 
+  {"perk4Var1": false}, {"perk4Var2": false}, {"perk4Var3": false}, {"perk5": false}, {"perk5Var1": false}, {"perk5Var2": false}, 
+  {"perk5Var3": false}, {"perkPrimaryStyle": false}, {"perkSubStyle": false}, {"statPerk0": false}, {"statPerk1": false}, 
+  {"statPerk2": false}]
 }
 
 const optReducer = (
@@ -16,14 +40,27 @@ const optReducer = (
 ): optState => {
   switch (action.type) {
     case actionTypes.UPDATE_PRESET:
+      let newStat = state.statOpt
+      newStat = newStat?.map((key, _value) => {
+        if(action.payload.preset) {
+          key[Object.keys(key)[0]] = action.payload.preset.includes(Object.keys(key)[0])
+        }
+        return key
+      })
       return {
         ...state,
         preset: action.payload.preset,
+        statOpt: newStat
       }
     case actionTypes.UPDATE_OUTPUT:
       return {
         ...state,
         outputTypes: action.payload.outputTypes
+      }
+    case actionTypes.CHANGE_SELECTOR:
+      return {
+        ...state,
+        statOpt: action.payload.statOpt
       }
   }
   return state;

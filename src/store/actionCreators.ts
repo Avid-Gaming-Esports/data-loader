@@ -23,7 +23,7 @@ export function changePreset(raw: optState) {
 
 export function changeSelectors(raw: optState) {
   return {
-    type: actionTypes.UPDATE_PRESET,
+    type: actionTypes.CHANGE_SELECTOR,
     payload: raw
   }
 }

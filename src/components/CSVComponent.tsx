@@ -10,7 +10,7 @@ interface CSVProps {
   headless: boolean;
 }
 
-function formatLine(value: PlayerData, sub: string[]) {
+function formatLine(value: PlayerData, sub: string[], store: optState) {
   let pre = Object.values(value).map((key, val) => {
     if(typeof(key) !== "object") {
       if (sub.includes(Object.keys(value)[val].toString())) {
@@ -21,7 +21,10 @@ function formatLine(value: PlayerData, sub: string[]) {
   })
   let statObj : Stats = value.stats;
   let statStr = Object.values(statObj).map((key, val) => {
-    if (sub.includes(Object.keys(statObj)[val].toString())) {
+    if(val === 0) {
+      return "";
+    }
+    if (store.statOpt && store.statOpt[val-1][Object.keys(statObj)[val]]) {
       return key.toString() + ",";
     }
     return "";
@@ -61,9 +64,9 @@ function CSVComponent(props: CSVProps) {
       <div className="csv-raw-format">
         {props.headless ? "" : <span>{didLoad.red ? formatHeader(didLoad.red[0], (preset ? preset : [])) : "ERROR"} <br /></span>}
         {didLoad.red ? didLoad.red.map((value: PlayerData, idx: number) => 
-          <span key={idx}>{formatLine(value, (preset ? preset : []))} <br /></span>) : <span></span>}
+          <span key={idx}>{formatLine(value, (preset ? preset : []), opt)} <br /></span>) : <span></span>}
         {didLoad.blue ? didLoad.blue.map((value: PlayerData, idx: number) => 
-          <span key={idx}>{formatLine(value, (preset ? preset : []))} <br /></span>) : <span></span>}
+          <span key={idx}>{formatLine(value, (preset ? preset : []), opt)} <br /></span>) : <span></span>}
       </div>
     </Alert>
   );

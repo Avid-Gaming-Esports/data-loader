@@ -9,7 +9,7 @@ import { RootState } from "../store/rootReducer";
 
 import '../style/Selector.css';
 
-import { changePreset, toggleOutput } from '../store/actionCreators';
+import { changePreset, changeSelectors, toggleOutput } from '../store/actionCreators';
 
 function handleChangePreset(dispatch: Dispatch<any>, target: string) {
   dispatch(changePreset({
@@ -17,9 +17,9 @@ function handleChangePreset(dispatch: Dispatch<any>, target: string) {
   }))
 }
 
-function handleChangeSelectors(dispatch: Dispatch<any>, target: string[] | undefined) {
-  dispatch(changePreset({
-    preset: target
+function handleChangeSelectors(dispatch: Dispatch<any>, store: optState) {
+  dispatch(changeSelectors({
+    statOpt: store.statOpt
   }))
 }
 
@@ -39,9 +39,6 @@ function Selector() {
   const store = useSelector((state: RootState) => state.opt);
   const [outputExpander, setOutputExpander] = useState("+");
   const [statExpander, setStatExpander] = useState("+");
-  console.log(store.preset);
-  console.log(Constants.PRESET_ARRAYS["stats"].filter((key) => 
-    store.preset?.includes(key)).length);
   return (
   <Accordion className="metadata">
     <Card>
@@ -156,17 +153,17 @@ function Selector() {
             label="Stats"
             name="statMasterOption"
             id="statsMaster"
-            checked={(Constants.PRESET_ARRAYS["stats"].filter(value => 
-              store.preset?.includes(value)
-            ).length > 0)}
-            onChange={(e) => { 
+            checked={(store.statOpt?.map((key, _value) => {
+              return key[Object.keys(key)[0]]
+            }))?.some((element) => element)}
+            onChange={(_e) => { 
               if (Constants.PRESET_ARRAYS["stats"].filter(value => 
                 store.preset?.includes(value)
               ).length > 0) {
                 let newPreset : string[] | undefined = store.preset?.filter(value => 
                   !Constants.PRESET_ARRAYS["stats"].includes(value)
                 )
-                handleChangeSelectors(dispatch, newPreset);
+                // handleChangeSelectors(dispatch, newPreset);
               } else {
                 let newPreset : string[] | undefined = Constants.PRESET_ARRAYS["stats"].filter(value => 
                   !store.preset?.includes(value)
@@ -174,7 +171,7 @@ function Selector() {
                 if (store.preset) {
                   newPreset = store.preset.concat(newPreset);
                 }
-                handleChangeSelectors(dispatch, newPreset);
+                // handleChangeSelectors(dispatch, newPreset);
               }
             }}
           />
@@ -195,17 +192,25 @@ function Selector() {
         <Accordion.Collapse eventKey="2" >
         <div>
         <Form.Group className="radios">
-          {Constants.PRESET_ARRAYS["stats"].map((key, val) => {
+          {store.statOpt?.map((key, val) => {
             return (
               <Form.Check
                 type="checkbox"
-                label={key}
+                label={Object.keys(key)[0]}
                 name="statsOption"
                 id={"statsOption" + val.toString()}
                 key={val}
                 className="radio-option"
-                checked={store.preset?.includes(key)}
+                checked={key[Object.keys(key)[0]]}
                 onChange={(_e) => {
+                  let index;
+                  if(store.statOpt) {
+                    index = store.statOpt[val];
+                    console.log(index)
+                    index[Object.keys(index)[0]] = !index[Object.keys(index)[0]]
+                    console.log(index)
+                  }
+                  handleChangeSelectors(dispatch, store);
                 }}
               />)
           })}
