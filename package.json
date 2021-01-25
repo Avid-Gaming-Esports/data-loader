@@ -19,7 +19,6 @@
     "ddragon": "^3.3.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "leagueoflegends-js": "0.0.6",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
     "react-bootstrap-table-next": "^4.0.3",

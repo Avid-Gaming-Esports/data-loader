@@ -34,11 +34,38 @@ function handleToggleOutput(store: optState, dispatch: Dispatch<any>, target: st
   }))
 }
 
+function isSubsetChecked(target?: { [key: string]: boolean; }[] | undefined){
+  return (target?.map((key, _value) => {
+    return key[Object.keys(key)[0]]
+  }))?.some((element) => element)
+}
+
+function toggleSubset(toggle: boolean, store: optState, dispatch: Dispatch<any>, 
+  target?: { [key: string]: boolean; }[] | undefined){
+  if (toggle) {
+    let updated = target?.map((key, _value) => {
+      key[Object.keys(key)[0]] = false
+      return key
+    })
+    target = updated
+    handleChangeSelectors(dispatch, store);
+    return;
+  }
+  let updated = target?.map((key, _value) => {
+    key[Object.keys(key)[0]] = true
+    return key
+  })
+  target = updated
+  handleChangeSelectors(dispatch, store);
+}
+
 function Selector() {
   const dispatch: Dispatch<any> = useDispatch();
   const store = useSelector((state: RootState) => state.opt);
   const [outputExpander, setOutputExpander] = useState("+");
+  const [generalExpander, setGeneralExpander] = useState("+");
   const [statExpander, setStatExpander] = useState("+");
+  const [timeExpander, setTimeExpander] = useState("+");
   return (
   <Accordion className="metadata">
     <Card>
@@ -47,7 +74,7 @@ function Selector() {
         Output &amp; Presets
         <Accordion.Toggle 
         as={Card} 
-        eventKey="1" 
+        eventKey="0" 
         className="group-by-expander"
         onClick={(_e) => {
             if (outputExpander === "+"){
@@ -59,7 +86,7 @@ function Selector() {
             {outputExpander}
         </Accordion.Toggle>
       </Card>
-      <Accordion.Collapse eventKey="1">
+      <Accordion.Collapse eventKey="0">
       <div>
       <Form.Group className="radios">
           <b>Preset: </b>
@@ -69,6 +96,7 @@ function Selector() {
             name="formHorizontalRadios"
             id="formHorizontalRadios1"
             className="radio-option"
+            defaultChecked
             onChange={(_e) => { 
               handleChangePreset(dispatch, "minimal");
             }}
@@ -79,7 +107,6 @@ function Selector() {
             name="formHorizontalRadios"
             id="formHorizontalRadios2"
             className="radio-option"
-            defaultChecked
             onChange={(_e) => { 
               handleChangePreset(dispatch, "advanced");
             }}
@@ -147,44 +174,70 @@ function Selector() {
     </Card>
     <Card>
       <Accordion as={Card.Header}>
+      <Card className="group-by">
+        Player (General)
+        <Accordion.Toggle 
+        as={Card} 
+        eventKey="1" 
+        className="group-by-expander"
+        onClick={(_e) => {
+            if (generalExpander === "+"){
+              setGeneralExpander("-");
+            } else {
+              setGeneralExpander("+");
+            }
+          }}>
+            {generalExpander}
+        </Accordion.Toggle>
+      </Card>
+      <Accordion.Collapse eventKey="1">
+      <div>
+      <Form.Group className="radios">
+        {store.generalOpt?.map((key, val) => {
+          return (
+            <Form.Check
+              type="checkbox"
+              label={Object.keys(key)[0]}
+              name="genOption"
+              id={"genOption" + val.toString()}
+              key={val}
+              className="radio-option"
+              checked={key[Object.keys(key)[0]]}
+              onChange={(_e) => {
+                let index;
+                if(store.generalOpt) {
+                  index = store.generalOpt[val];
+                  index[Object.keys(index)[0]] = !index[Object.keys(index)[0]]
+                }
+                handleChangeSelectors(dispatch, store);
+              }}
+            />)
+          })}
+      </Form.Group>
+      </div>
+      </Accordion.Collapse>
+      </Accordion>
+    </Card>
+    <Card>
+      <Accordion as={Card.Header}>
         <Card className="group-by">
           <Form.Check
             type="checkbox"
-            label="Stats"
+            label="Player (Stats)"
             name="statMasterOption"
             id="statsMaster"
-            checked={(store.statOpt?.map((key, _value) => {
-              return key[Object.keys(key)[0]]
-            }))?.some((element) => element)}
-            onChange={(_e) => { 
-              if (Constants.PRESET_ARRAYS["stats"].filter(value => 
-                store.preset?.includes(value)
-              ).length > 0) {
-                let newPreset : string[] | undefined = store.preset?.filter(value => 
-                  !Constants.PRESET_ARRAYS["stats"].includes(value)
-                )
-                // handleChangeSelectors(dispatch, newPreset);
-              } else {
-                let newPreset : string[] | undefined = Constants.PRESET_ARRAYS["stats"].filter(value => 
-                  !store.preset?.includes(value)
-                )
-                if (store.preset) {
-                  newPreset = store.preset.concat(newPreset);
-                }
-                // handleChangeSelectors(dispatch, newPreset);
-              }
+            checked={isSubsetChecked(store.statOpt)}
+            onChange={(_e) => { (isSubsetChecked(store.statOpt)) ?
+              toggleSubset(true, store, dispatch, store.statOpt) :
+              toggleSubset(false, store, dispatch, store.statOpt);
             }}
           />
           <Accordion.Toggle 
           as={Card} 
           eventKey="2" 
           className="group-by-expander"
-          onClick={(_e) => {
-            if (statExpander === "+"){
-              setStatExpander("-");
-            } else {
-              setStatExpander("+");
-            }
+          onClick={(_e) => { (statExpander === "+") ?
+            setStatExpander("-") : setStatExpander("+");
           }}>
               {statExpander}
           </Accordion.Toggle>
@@ -206,9 +259,59 @@ function Selector() {
                   let index;
                   if(store.statOpt) {
                     index = store.statOpt[val];
-                    console.log(index)
                     index[Object.keys(index)[0]] = !index[Object.keys(index)[0]]
-                    console.log(index)
+                  }
+                  handleChangeSelectors(dispatch, store);
+                }}
+              />)
+          })}
+          </Form.Group>
+        </div>
+        </Accordion.Collapse>
+      </Accordion>
+    </Card>
+    <Card>
+      <Accordion as={Card.Header}>
+        <Card className="group-by">
+          <Form.Check
+            type="checkbox"
+            label="Player (Timeline)"
+            name="timeMasterOption"
+            id="timeMaster"
+            checked={isSubsetChecked(store.timelineOpt)}
+            onChange={(_e) => { (isSubsetChecked(store.timelineOpt)) ?
+              toggleSubset(true, store, dispatch, store.timelineOpt) :
+              toggleSubset(false, store, dispatch, store.timelineOpt);
+            }}
+          />
+          <Accordion.Toggle 
+          as={Card} 
+          eventKey="2" 
+          className="group-by-expander"
+          onClick={(_e) => { (timeExpander === "+") ?  
+          setTimeExpander("-") : setTimeExpander("+");
+          }}>
+              {timeExpander}
+          </Accordion.Toggle>
+        </Card>
+        <Accordion.Collapse eventKey="2" >
+        <div>
+        <Form.Group className="radios">
+          {store.timelineOpt?.map((key, val) => {
+            return (
+              <Form.Check
+                type="checkbox"
+                label={Object.keys(key)[0]}
+                name="timeOption"
+                id={"timeOption" + val.toString()}
+                key={val}
+                className="radio-option"
+                checked={key[Object.keys(key)[0]]}
+                onChange={(_e) => {
+                  let index;
+                  if(store.timelineOpt) {
+                    index = store.timelineOpt[val];
+                    index[Object.keys(index)[0]] = !index[Object.keys(index)[0]]
                   }
                   handleChangeSelectors(dispatch, store);
                 }}

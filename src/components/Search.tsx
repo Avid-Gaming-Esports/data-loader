@@ -7,22 +7,51 @@ import axios from 'axios';
 
 import { putGameID } from '../store/actionCreators';
 
+import { Constants } from './Constants';
+
 import '../style/View.css';
+
+var champMap = require('../champion.json');
+var ssMap = require('../summoner-spells.json');
 
 function Search() {
   const dispatch: Dispatch<any> = useDispatch();
   const [matchID, setMatchID] = useState(0);
 
+  let champTransform : {[key: number] : any} = { };
+  for (let idNugget in champMap.data) {
+    champTransform[champMap.data[idNugget].key] = idNugget;
+  }
+  let champKeys = Object.keys(champTransform).map((val) => {
+    return parseInt(val)
+  })
+  let ssTransform : {[key: number] : any} = { };
+  for (let idNugget in ssMap) {
+    ssTransform[ssMap[idNugget].id] = ssMap[idNugget].name
+  }
+
   let callApi = async () => {
     axios.post("http://localhost:5000/api", {
       gameID: matchID
     }).then((res) => {
-      // console.log(res);
+      // console.log(res.data);
+      res.data.participants = res.data.participants.map((key : any) => {
+        key.teamId = Constants.TEAM_MAP[key.teamId]
+        if(champKeys.includes(key.championId)) {
+          key.championId = champTransform[key.championId.toString()]
+        } else {
+          console.log(key.championId)
+          key.championId = "unknown"
+        }
+        key.spell1Id = ssTransform[key.spell1Id];
+        key.spell2Id = ssTransform[key.spell2Id];
+        return key
+      })
       // console.log(typeof(res));
       let pullRed = res.data.participants
-        .filter((player: PlayerData) => player.teamId === 100);
+        .filter((player: PlayerData) => player.teamId === "red");
       let pullBlue = res.data.participants
-        .filter((player: PlayerData) => player.teamId === 200);
+        .filter((player: PlayerData) => player.teamId === "blue");
       const toUpdate : gameState = {
         blue: pullBlue,
         red: pullRed,

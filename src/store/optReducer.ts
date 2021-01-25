@@ -2,12 +2,14 @@ import * as actionTypes from "./actionTypes"
 import { Constants } from '../components/Constants';
 
 const initialState: optState = {
-  preset: Constants.PRESET_ARRAYS["advanced"],
+  preset: Constants.PRESET_ARRAYS["minimal"],
   outputTypes: {
     "JSON": true,
     "CSV": true,
     "CSV-Headless": true
   },
+  generalOpt: [{"participantId": true}, {"teamId": true}, {"championId": true}, 
+  {"spell1Id": true}, {"spell2Id": true}],
   statOpt: [{"win": false}, {"item0": false}, {"item1": false}, {"item2": false}, {"item3": false}, 
   {"item4": false}, {"item5": false}, {"item6": false}, {"kills": false}, {"deaths": false}, 
   {"assists": false}, {"largestKillingSpree": false}, {"largestMultiKill": false}, {"killingSprees": false}, 
@@ -31,7 +33,10 @@ const initialState: optState = {
   {"perk2Var3": false}, {"perk3": false}, {"perk3Var1": false}, {"perk3Var2": false}, {"perk3Var3": false}, {"perk4": false}, 
   {"perk4Var1": false}, {"perk4Var2": false}, {"perk4Var3": false}, {"perk5": false}, {"perk5Var1": false}, {"perk5Var2": false}, 
   {"perk5Var3": false}, {"perkPrimaryStyle": false}, {"perkSubStyle": false}, {"statPerk0": false}, {"statPerk1": false}, 
-  {"statPerk2": false}]
+  {"statPerk2": false}],
+  timelineOpt: [{"creepsPerMinDeltas": false}, {"xpPerMinDeltas": false}, {"goldPerMinDeltas": false}, {"csDiffPerMinDeltas": false}, 
+  {"xpDiffPerMinDeltas": false}, {"damageTakenPerMinDeltas": false}, {"damageTakenDiffPerMinDeltas": false}, {"role": false}, 
+  {"lane": false}]
 }
 
 const optReducer = (
@@ -47,9 +52,17 @@ const optReducer = (
         }
         return key
       })
+      let newGen = state.generalOpt
+      newGen = newGen?.map((key, _value) => {
+        if(action.payload.preset) {
+          key[Object.keys(key)[0]] = action.payload.preset.includes(Object.keys(key)[0])
+        }
+        return key
+      })
       return {
         ...state,
         preset: action.payload.preset,
+        generalOpt: newGen,
         statOpt: newStat
       }
     case actionTypes.UPDATE_OUTPUT:

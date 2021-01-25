@@ -24,7 +24,9 @@ type gameState = {
 type optState = {
   preset?: string[],
   outputTypes?: {[key: string] : boolean},
-  statOpt?: {[key: string] : boolean}[]
+  generalOpt?: {[key: string] : boolean}[],
+  statOpt?: {[key: string] : boolean}[],
+  timelineOpt?: {[key: string] : boolean}[]
 }
 
 type updateAction = {
@@ -47,18 +49,16 @@ type gameData = {
 
 type optData = {
   type: string,
-  preset?: string[],
-  outputTypes?: {[key: string] : boolean}
 }
 
 type PlayerData = {
-  championId: number,
+  championId: string,
   participantId: number,
-  spell1Id: number,
-  spell2Id: number,
+  spell1Id: string,
+  spell2Id: string,
   stats: Stats,
   timeline: Timeline,
-  teamId: number
+  teamId: string
 }
 
 type Stats = {
@@ -168,15 +168,15 @@ type Stats = {
 }
 
 type Timeline = {
-  creepsPerMinDeltas: Object,
-  csDiffPerMinDeltas: Object,
-  damageTakenDiffPerMinDeltas: Object,
-  damageTakenPerMinDeltas: Object,
-  goldPerMinDeltas: Object,
+  creepsPerMinDeltas: {[key: string] : number},
+  csDiffPerMinDeltas: {[key: string] : number},
+  damageTakenDiffPerMinDeltas: {[key: string] : number},
+  damageTakenPerMinDeltas: {[key: string] : number},
+  goldPerMinDeltas: {[key: string] : number},
   lane: string,
   role: string,
-  xpDiffPerMinDeltas: Object,
-  xpPerMinDeltas: Object
+  xpDiffPerMinDeltas: {[key: string] : number},
+  xpPerMinDeltas: {[key: string] : number}
 }
 
 type Player = {

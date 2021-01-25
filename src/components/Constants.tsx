@@ -1,7 +1,7 @@
 export abstract class Constants {
   static readonly PRESET_ARRAYS: {[key: string] : string[]} = {
-    "minimal": ["championId", "spell1Id", "spell2Id", "teamId"],
-    "advanced": ["championId", "assists", "champLevel", "damageDealtToObjectives", 
+    "minimal": ["participantId", "championId", "spell1Id", "spell2Id", "teamId"],
+    "advanced": ["participantId", "championId", "assists", "champLevel", "damageDealtToObjectives", 
     "damageDealtToTurrets", "damageSelfMitigated", "deaths", "goldEarned", "goldSpent", "item0", 
     "item1", "item2", "item3", "item4", "item5", "item6", "kills", "magicDamageDealt", 
     "neutralMinionsKilled", "physicalDamageDealt", "timeCCingOthers", "totalDamageDealt", "totalHeal", 
@@ -25,22 +25,9 @@ export abstract class Constants {
     "perk3Var3", "perk4", "perk4Var1", "perk4Var2", "perk4Var3", "perk5", "perk5Var1", "perk5Var2", "perk5Var3", 
     "perkPrimaryStyle", "perkSubStyle", "statPerk0", "statPerk1", "statPerk2"],
     "none": [],
-    "stats": ["win", "item0", "item1", "item2", "item3", "item4", "item5", 
-    "item6", "kills", "deaths", "assists", "largestKillingSpree", "largestMultiKill", "killingSprees", 
-    "longestTimeSpentLiving", "doubleKills", "tripleKills", "quadraKills", "pentaKills", "unrealKills", 
-    "totalDamageDealt", "magicDamageDealt", "physicalDamageDealt", "trueDamageDealt", "largestCriticalStrike", 
-    "totalDamageDealtToChampions", "magicDamageDealtToChampions", "physicalDamageDealtToChampions", 
-    "trueDamageDealtToChampions", "totalHeal", "totalUnitsHealed", "damageSelfMitigated", "damageDealtToObjectives", 
-    "damageDealtToTurrets", "visionScore", "timeCCingOthers", "totalDamageTaken", "magicalDamageTaken", 
-    "physicalDamageTaken", "trueDamageTaken", "goldEarned", "goldSpent", "turretKills", "inhibitorKills", 
-    "totalMinionsKilled", "neutralMinionsKilled", "neutralMinionsKilledTeamJungle", "neutralMinionsKilledEnemyJungle", 
-    "totalTimeCrowdControlDealt", "champLevel", "visionWardsBoughtInGame", "sightWardsBoughtInGame", "wardsPlaced", 
-    "wardsKilled", "firstBloodKill", "firstBloodAssist", "firstTowerKill", "firstTowerAssist", "firstInhibitorKill", 
-    "firstInhibitorAssist", "combatPlayerScore", "objectivePlayerScore", "totalPlayerScore", "totalScoreRank", 
-    "playerScore0", "playerScore1", "playerScore2", "playerScore3", "playerScore4", "playerScore5", "playerScore6", 
-    "playerScore7", "playerScore8", "playerScore9", "perk0", "perk0Var1", "perk0Var2", "perk0Var3", "perk1", "perk1Var1", 
-    "perk1Var2", "perk1Var3", "perk2", "perk2Var1", "perk2Var2", "perk2Var3", "perk3", "perk3Var1", "perk3Var2", 
-    "perk3Var3", "perk4", "perk4Var1", "perk4Var2", "perk4Var3", "perk5", "perk5Var1", "perk5Var2", "perk5Var3", 
-    "perkPrimaryStyle", "perkSubStyle", "statPerk0", "statPerk1", "statPerk2"]
   };
+  static readonly TEAM_MAP: {[key: number] : string} = {
+    100: "blue",
+    200: "red"
+  }
 }

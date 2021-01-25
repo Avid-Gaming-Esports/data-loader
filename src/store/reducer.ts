@@ -107,99 +107,99 @@ const pHStats: Stats = {
 }
 
 const pHTimeline: Timeline = {
-  creepsPerMinDeltas: Object,
-  csDiffPerMinDeltas: Object,
-  damageTakenDiffPerMinDeltas: Object,
-  damageTakenPerMinDeltas: Object,
-  goldPerMinDeltas: Object,
+  creepsPerMinDeltas: {},
+  csDiffPerMinDeltas: {},
+  damageTakenDiffPerMinDeltas: {},
+  damageTakenPerMinDeltas: {},
+  goldPerMinDeltas: {},
   lane: "NONE",
   role: "NONE",
-  xpDiffPerMinDeltas: Object,
-  xpPerMinDeltas: Object
+  xpDiffPerMinDeltas: {},
+  xpPerMinDeltas: {}
 }
 
 const initialState: gameState = {
   blue: [{
-    championId: 523,
+    championId: "Aatrox",
     participantId: 1,
-    spell1Id: 4,
-    spell2Id: 7,
+    spell1Id: "Flash",
+    spell2Id: "Ignite",
     stats: pHStats,
     timeline: pHTimeline,
-    teamId: 200
+    teamId: "red"
   },{
-    championId: 523,
+    championId: "Aatrox",
     participantId: 2,
-    spell1Id: 4,
-    spell2Id: 7,
+    spell1Id: "Flash",
+    spell2Id: "Ignite",
     stats: pHStats,
     timeline: pHTimeline,
-    teamId: 200
+    teamId: "red"
   },{
-    championId: 523,
+    championId: "Aatrox",
     participantId: 3,
-    spell1Id: 4,
-    spell2Id: 7,
+    spell1Id: "Flash",
+    spell2Id: "Ignite",
     stats: pHStats,
     timeline: pHTimeline,
-    teamId: 200
+    teamId: "red"
   },{
-    championId: 523,
+    championId: "Aatrox",
     participantId: 4,
-    spell1Id: 4,
-    spell2Id: 7,
+    spell1Id: "Flash",
+    spell2Id: "Ignite",
     stats: pHStats,
     timeline: pHTimeline,
-    teamId: 200
+    teamId: "red"
   },{
-    championId: 523,
+    championId: "Aatrox",
     participantId: 5,
-    spell1Id: 4,
-    spell2Id: 7,
+    spell1Id: "Flash",
+    spell2Id: "Ignite",
     stats: pHStats,
     timeline: pHTimeline,
-    teamId: 200
+    teamId: "red"
   }],
   red: [{
-    championId: 523,
+    championId: "Aatrox",
     participantId: 6,
-    spell1Id: 4,
-    spell2Id: 7,
+    spell1Id: "Flash",
+    spell2Id: "Ignite",
     stats: pHStats,
     timeline: pHTimeline,
-    teamId: 100
+    teamId: "blue"
   },{
-    championId: 523,
+    championId: "Aatrox",
     participantId: 7,
-    spell1Id: 4,
-    spell2Id: 7,
+    spell1Id: "Flash",
+    spell2Id: "Ignite",
     stats: pHStats,
     timeline: pHTimeline,
-    teamId: 100
+    teamId: "blue"
   },{
-    championId: 523,
+    championId: "Aatrox",
     participantId: 8,
-    spell1Id: 4,
-    spell2Id: 7,
+    spell1Id: "Flash",
+    spell2Id: "Ignite",
     stats: pHStats,
     timeline: pHTimeline,
-    teamId: 100
+    teamId: "blue"
   },{
-    championId: 523,
+    championId: "Aatrox",
     participantId: 9,
-    spell1Id: 4,
-    spell2Id: 7,
+    spell1Id: "Flash",
+    spell2Id: "Ignite",
     stats: pHStats,
     timeline: pHTimeline,
-    teamId: 100
+    teamId: "blue"
   },{
-    championId: 523,
+    championId: "Aatrox",
     participantId: 10,
-    spell1Id: 4,
-    spell2Id: 7,
+    spell1Id: "Flash",
+    spell2Id: "Ignite",
     stats: pHStats,
     timeline: pHTimeline,
-    teamId: 100
+    teamId: "blue"
   }],
   raw: JSON.stringify(""),
   onView: false
@@ -211,7 +211,7 @@ const reducer = (
 ): gameState => {
   switch (action.type) {
     case actionTypes.UPDATE_INFO:
-      console.log(action.payload)
+      // console.log(action.payload)
       if (action.payload.blue && action.payload.red) {
         return {
           ...state,
