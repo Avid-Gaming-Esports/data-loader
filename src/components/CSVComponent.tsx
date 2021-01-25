@@ -10,6 +10,12 @@ interface CSVProps {
   headless: boolean;
 }
 
+function swap(arr: any[], idx1: number, idx2: number) {
+  let tmp = arr[idx1];
+  arr[idx1] = arr[idx2];
+  arr[idx2] = tmp;
+}
+
 function formatLine(value: PlayerData, store: optState) {
   let statObj : Stats = value.stats;
   let timeObj : Timeline = value.timeline;
@@ -26,10 +32,11 @@ function formatLine(value: PlayerData, store: optState) {
       statKeys[Object.keys(store.statOpt[i])[0]] = i
     }
   }
-  let timeKeys : {[key: string] : number} = { };
+  let timeKeys : { [key: string] : number; } = { };
   if(store.timelineOpt) {
     for(let i = 0; i < Object.keys(store.timelineOpt).length; i++) {
-      timeKeys[Object.keys(store.timelineOpt[i])[0]] = i
+      let idx = Object.keys(timeObj).indexOf(Object.keys(store.timelineOpt[i])[0])-1;
+      timeKeys[Object.keys(store.timelineOpt[i])[0]] = idx
     }
   }
   let pre = Object.values(value).map((key, val) => {
@@ -53,7 +60,19 @@ function formatLine(value: PlayerData, store: optState) {
     }
     return "";
   });
-  let timeStr = Object.values(timeObj).map((key, val) => {
+  let objKeys = Object.keys(timeObj).slice(1);
+  let customKeys = Object.keys(timeKeys);
+  let toFix : number[][] = [];
+  for (let i = 0; i < (Math.ceil(Object.keys(timeKeys).length / 2)); i++) {
+    if (objKeys[i] !== customKeys[i]) {
+      toFix.push([objKeys.indexOf(objKeys[i]), objKeys.indexOf(customKeys[i])])
+    }
+  }
+  let toMap = Object.values(timeObj);
+  for (let i = 0; i < toFix.length; i++) {
+    swap(toMap, toFix[i][0]+2, toFix[i][1]+2);
+  }
+  let timeStr = toMap.map((key, val) => {
     if(val === 0) {
       return "";
     }
@@ -63,7 +82,11 @@ function formatLine(value: PlayerData, store: optState) {
       if(typeof(key) !== "object") {
         return key.toString() + ",";
       } else {
-        let retStr = Object.keys(key).map((sub_key: string, sub_val: any) => {
+        let retStr = Object.keys(key).map((sub_key: string, _sub_val: any) => {
+          // console.log(key[sub_key])
+          if(key[sub_key] === -1) {
+            return ""
+          }
           return key[sub_key].toString()
         })
         return retStr.join(',') + ",";
@@ -87,7 +110,6 @@ function formatHeader(value: PlayerData, store: optState) {
   let pre = Object.keys(value).map((key, val) => {
     if(typeof(key) !== "object" && Object.keys(genKeys).includes(key) 
       && store.generalOpt && store.generalOpt[genKeys[key]][key]) {
-      console.log(key);
       return key.toString() + ",";
     }
     return "";

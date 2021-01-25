@@ -45,9 +45,37 @@ function Search() {
         }
         key.spell1Id = ssTransform[key.spell1Id];
         key.spell2Id = ssTransform[key.spell2Id];
+        let reqTimeline : string[] = ["creepsPerMinDeltas", "xpPerMinDeltas", 
+        "goldPerMinDeltas", "csDiffPerMinDeltas", "xpDiffPerMinDeltas",
+        "damageTakenPerMinDeltas", "damageTakenDiffPerMinDeltas"];
+        // let copy = key.timeline;
+        // // key.timeline = { }
+        // for (let selector in reqTimeline) {
+        //   let givenData = key.timeline[reqTimeline[selector]]
+        //   let keyWork = (givenData === undefined) ? ["0-10", "10-20", "20-30", "30-end"] : 
+        //     ["0-10", "10-20", "20-30", "30-end"].filter((val) => !Object.keys(givenData).includes(val))
+        //   if (givenData === undefined) {
+        //     key.timeline[reqTimeline[selector]] = { }
+        //   }
+        //   for (let toAdd in keyWork) {
+        //     key.timeline[reqTimeline[selector]][keyWork[toAdd]] = -1
+        //   }
+        // }
+        // key.timeline.role = copy.role;
+        // key.timeline.lane = copy.lane;
+        for (let selector in reqTimeline) {
+          let givenData = key.timeline[reqTimeline[selector]]
+          let keyWork = (givenData === undefined) ? ["0-10", "10-20", "20-30", "30-end"] : 
+            ["0-10", "10-20", "20-30", "30-end"].filter((val) => !Object.keys(givenData).includes(val))
+          if (givenData === undefined) {
+            key.timeline[reqTimeline[selector]] = { }
+          }
+          for (let toAdd in keyWork) {
+            key.timeline[reqTimeline[selector]][keyWork[toAdd]] = -1
+          }
+        }
         return key
       })
-      // console.log(typeof(res));
       let pullRed = res.data.participants
         .filter((player: PlayerData) => player.teamId === "red");
       let pullBlue = res.data.participants

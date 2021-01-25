@@ -146,7 +146,7 @@ function Table({side} : TableProps) {
   });
   const redData: redData[] = useSelector((state: RootState) => state.main.red)
     .map((Player: PlayerData) => {
-      console.log(Player.championId)
+      // console.log(Player.championId)
     return {
       rid: Player.participantId.toString(), 
       rpos: Player.timeline.lane,
@@ -158,8 +158,8 @@ function Table({side} : TableProps) {
       rgold: Player.stats.goldEarned.toString()
     }
   });
-  console.log(blueData)
-  console.log(redData)
+  // console.log(blueData)
+  // console.log(redData)
   return (
     side === "red" ? <BootstrapTable keyField='rid' data={ redData } columns={ redColumns } /> : 
     <BootstrapTable keyField='bid' data={ blueData } columns={ blueColumns } />
