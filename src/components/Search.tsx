@@ -13,6 +13,7 @@ import '../style/View.css';
 
 var champMap = require('../champion.json');
 var ssMap = require('../summoner-spells.json');
+var itemMap = require('../item.json').data;
 
 function Search() {
   const dispatch: Dispatch<any> = useDispatch();
@@ -29,6 +30,7 @@ function Search() {
   for (let idNugget in ssMap) {
     ssTransform[ssMap[idNugget].id] = ssMap[idNugget].name
   }
+  let itemKeys = Object.keys(itemMap);
 
   let callApi = async () => {
     axios.post("http://localhost:5000/api", {
@@ -43,26 +45,17 @@ function Search() {
           console.log(key.championId)
           key.championId = "unknown"
         }
+        for (let i = 0; i < 7; i++) {
+          let itemString = key.stats["item"+i.toString()].toString()
+          key.stats["item"+i.toString()] = (itemKeys.includes(itemString)) ? 
+            itemMap[itemString].name : "";
+        } 
         key.spell1Id = ssTransform[key.spell1Id];
         key.spell2Id = ssTransform[key.spell2Id];
+
         let reqTimeline : string[] = ["creepsPerMinDeltas", "xpPerMinDeltas", 
         "goldPerMinDeltas", "csDiffPerMinDeltas", "xpDiffPerMinDeltas",
         "damageTakenPerMinDeltas", "damageTakenDiffPerMinDeltas"];
-        // let copy = key.timeline;
-        // // key.timeline = { }
-        // for (let selector in reqTimeline) {
-        //   let givenData = key.timeline[reqTimeline[selector]]
-        //   let keyWork = (givenData === undefined) ? ["0-10", "10-20", "20-30", "30-end"] : 
-        //     ["0-10", "10-20", "20-30", "30-end"].filter((val) => !Object.keys(givenData).includes(val))
-        //   if (givenData === undefined) {
-        //     key.timeline[reqTimeline[selector]] = { }
-        //   }
-        //   for (let toAdd in keyWork) {
-        //     key.timeline[reqTimeline[selector]][keyWork[toAdd]] = -1
-        //   }
-        // }
-        // key.timeline.role = copy.role;
-        // key.timeline.lane = copy.lane;
         for (let selector in reqTimeline) {
           let givenData = key.timeline[reqTimeline[selector]]
           let keyWork = (givenData === undefined) ? ["0-10", "10-20", "20-30", "30-end"] : 

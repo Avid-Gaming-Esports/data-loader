@@ -138,7 +138,9 @@ function Table({side} : TableProps) {
       bpos: Player.timeline.lane,
       bpick: Player.championId,
       bkda: formatKDA(Player),
-      bitems: Player.stats.item0.toString(),
+      bitems: [Player.stats.item0, Player.stats.item1, Player.stats.item2, 
+        Player.stats.item3, Player.stats.item4, Player.stats.item5, 
+        Player.stats.item6].filter((val) => (val !== "")).join(', '),
       bcs: (Player.stats.totalMinionsKilled + 
         Player.stats.neutralMinionsKilled).toString(), 
       bgold: Player.stats.goldEarned.toString()
@@ -152,7 +154,9 @@ function Table({side} : TableProps) {
       rpos: Player.timeline.lane,
       rpick: Player.championId,
       rkda: formatKDA(Player),
-      ritems: Player.stats.item0.toString(),
+      ritems: [Player.stats.item0, Player.stats.item1, Player.stats.item2, 
+      Player.stats.item3, Player.stats.item4, Player.stats.item5, 
+      Player.stats.item6].filter((val) => (val !== "")).join(', '),
       rcs: (Player.stats.totalMinionsKilled + 
         Player.stats.neutralMinionsKilled).toString(), 
       rgold: Player.stats.goldEarned.toString()
