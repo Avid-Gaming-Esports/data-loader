@@ -30,4 +30,11 @@ export abstract class Constants {
     100: "blue",
     200: "red"
   }
+  static readonly COL_ROLE_MAP: {[key: string] : any} = {
+    "TOP": "SOLO",
+    "JUNGLE": "NONE",
+    "MID": "SOLO",
+    "BOTTOM": "DUO_CARRY",
+    "SUPPORT": "DUO_SUPPORT"
+  }
 }

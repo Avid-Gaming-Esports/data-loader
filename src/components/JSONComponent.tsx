@@ -7,8 +7,15 @@ import { RootState } from "../store/rootReducer";
 
 import '../style/JSONComponent.css';
 
+function swap(arr: any[], idx1: number, idx2: number) {
+  let tmp = arr[idx1];
+  arr[idx1] = arr[idx2];
+  arr[idx2] = tmp;
+}
+
 function formatJSONObj(rPlayers: PlayerData[], bPlayers: PlayerData[], 
   store: optState) {
+  let timeObj = rPlayers[0].timeline
   let participantArr : any[] = []
   let retObj = {
     participants: {
@@ -23,12 +30,21 @@ function formatJSONObj(rPlayers: PlayerData[], bPlayers: PlayerData[],
       genKeys[Object.keys(store.generalOpt[i])[0]] = i
     }
   }
-  // let statKeys : {[key: string] : number} = { };
-  // if(store.statOpt) {
-  //   for(let i = 0; i < Object.keys(store.statOpt).length; i++) {
-  //     statKeys[Object.keys(store.statOpt[i])[0]] = i
-  //   }
-  // }
+  let timeKeys : { [key: string] : number; } = { };
+  if(store.timelineOpt) {
+    for(let i = 0; i < Object.keys(store.timelineOpt).length; i++) {
+      let idx = Object.keys(timeObj).indexOf(Object.keys(store.timelineOpt[i])[0])-1;
+      timeKeys[Object.keys(store.timelineOpt[i])[0]] = idx
+    }
+  }
+  let objKeys = Object.keys(timeObj).slice(1);
+  let customKeys = Object.keys(timeKeys);
+  let toFix : number[][] = [];
+  for (let i = 0; i < (Math.ceil(Object.keys(timeKeys).length / 2)); i++) {
+    if (objKeys[i] !== customKeys[i]) {
+      toFix.push([objKeys.indexOf(objKeys[i]), objKeys.indexOf(customKeys[i])])
+    }
+  }
   let toAddRed = rPlayers.map((val: PlayerData) => {
     let stripped: { [key: string]: any } = {};
     Object.values(val).forEach((sub_key, sub_val) => {
@@ -56,6 +72,41 @@ function formatJSONObj(rPlayers: PlayerData[], bPlayers: PlayerData[],
     });
     if (Object.keys(stripped["stats"]).length === 0) {
       delete stripped["stats"];
+    }
+    stripped["timeline"] = { }
+    let toMap = Object.values(val.timeline);
+    for (let i = 0; i < toFix.length; i++) {
+      swap(toMap, toFix[i][0]+2, toFix[i][1]+2);
+    }
+    Object.values(val.timeline).forEach((sub_key, sub_val) => {
+      if(sub_val === 0) {
+        return
+      } else {
+        let idx = timeKeys[Object.keys(val.timeline)[sub_val]]
+        if (store.timelineOpt && 
+          store.timelineOpt[idx][Object.keys(store.timelineOpt[idx])[0]]) {
+          if(typeof(sub_key) !== "object") {
+            stripped["timeline"][Object.keys(val.timeline)[sub_val]] = sub_key
+          } else {
+            stripped["timeline"][Object.keys(val.timeline)[sub_val]] = { }
+            let retStr = ["0-10", "10-20", "20-30", "30-end"]
+            retStr.forEach((sub2_key: string, _sub2_val: any) => {
+              if(sub_key[sub2_key] === -1) {
+                return
+              }
+              stripped["timeline"][Object.keys(val.timeline)[sub_val]][sub2_key] 
+                = sub_key[sub2_key]
+            })
+            if (Object.keys(stripped["timeline"][Object.keys(val.timeline)[sub_val]]).length 
+              === 0) {
+              delete stripped["timeline"][Object.keys(val.timeline)[sub_val]];
+            }
+          }
+        }
+      }
+    });
+    if (Object.keys(stripped["timeline"]).length === 0) {
+      delete stripped["timeline"];
     }
     return stripped
   })

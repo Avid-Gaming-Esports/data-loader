@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Dispatch } from "redux"
-import { useDispatch } from "react-redux"
+import { Dispatch } from "redux";
+import { useDispatch } from "react-redux";
 import { InputGroup, FormControl } from 'react-bootstrap';
 import { FiSearch } from "react-icons/fi";
 import axios from 'axios';
@@ -90,9 +90,9 @@ function Search() {
           <InputGroup.Text className="lb-1"><FiSearch size={"1.2rem"}/></InputGroup.Text>
         </InputGroup.Prepend>
         <FormControl
-          className="match-id"
-          placeholder="MatchID"
-          aria-label="match-id"
+          className="game-id"
+          placeholder="GameID"
+          aria-label="game-id"
           aria-describedby="basic-addon1"
           type="number"
           onChange={(event) => setMatchID(parseInt(event.target.value))}

@@ -226,7 +226,6 @@ const reducer = (
         }
       }
     case actionTypes.UPDATE_STATE:
-      console.log(action.payload)
       return {
         ...state,
         onView: action.payload.onView,

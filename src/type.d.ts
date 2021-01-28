@@ -1,5 +1,7 @@
 interface blueData {
   bid: string, 
+  bpos: string,
+  bpick: string,
   bkda: string,
   bitems: string,
   bcs: string, 
@@ -8,6 +10,8 @@ interface blueData {
 
 interface redData {
   rid: string, 
+  rpos: string, 
+  rpick: string,
   rkda: string,
   ritems: string,
   rcs: string, 
