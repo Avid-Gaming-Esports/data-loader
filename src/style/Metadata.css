@@ -1,15 +1,3 @@
-.radios {
-  display: flex;
-  flex-direction: row;
-  padding: 1% 0% 1% 1%;
-  margin-bottom: 0rem;
-  flex-wrap: wrap;
-}
-
-.radio-option {
-  margin-left: 1rem;
-}
-
 .group-by {
   display: flex;
   flex-direction: row;
@@ -34,4 +22,14 @@
 .metadata {
   width: 100%;
   margin-bottom: 1rem;
+}
+
+.md-option {
+  max-width: 40%;
+}
+
+.md-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }

@@ -30,11 +30,23 @@ export abstract class Constants {
     100: "blue",
     200: "red"
   }
-  static readonly COL_ROLE_MAP: {[key: string] : any} = {
+  static readonly COL_ROLE_MAP: {[key: string] : string} = {
     "TOP": "SOLO",
     "JUNGLE": "NONE",
     "MID": "SOLO",
     "BOTTOM": "DUO_CARRY",
     "SUPPORT": "DUO_SUPPORT"
+  }
+  static readonly METADATA_EDIT_MAP: {[key: string] : boolean} = {
+    "gameCreation": true, 
+    "gameDuration": true, 
+    "gameId": false, 
+    "gameMode": false, 
+    "gameType": true, 
+    "gameVersion": false, 
+    "mapId": false, 
+    "platformId": false, 
+    "queueId": false, 
+    "seasonId": false
   }
 }

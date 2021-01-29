@@ -21,6 +21,7 @@ interface redData {
 type gameState = {
   blue: PlayerData[], 
   red: PlayerData[],
+  meta: Metadata,
   raw: string,
   onView?: boolean,
 }
@@ -47,12 +48,26 @@ type gameData = {
   type: string,
   red?: PlayerData[],
   blue?: PlayerData[],
+  meta?: Metadata,
   raw?: object,
   onView?: boolean,
 }
 
 type optData = {
   type: string,
+}
+
+type Metadata = {
+  gameCreation: number,
+  gameDuration: number,
+  gameId: number,
+  gameMode: string,
+  gameType: string,
+  gameVersion: string,
+  mapId: number,
+  platformId: string,
+  queueId: number,
+  seasonId: number
 }
 
 type PlayerData = {

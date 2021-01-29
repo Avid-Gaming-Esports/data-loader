@@ -14,10 +14,20 @@ function swap(arr: any[], idx1: number, idx2: number) {
 }
 
 function formatJSONObj(rPlayers: PlayerData[], bPlayers: PlayerData[], 
-  store: optState) {
+  meta: Metadata, store: optState) {
   let timeObj = rPlayers[0].timeline
   let participantArr : any[] = []
   let retObj = {
+    gameCreation: meta.gameCreation,
+    gameDuration: meta.gameDuration,
+    gameId: meta.gameId,
+    gameMode: meta.gameMode,
+    gameType: meta.gameType,
+    gameVersion: meta.gameVersion,
+    mapId: meta.mapId,
+    platformId: meta.platformId,
+    queueId: meta.queueId,
+    seasonId: meta.seasonId,
     participants: {
       red: participantArr,
       blue: participantArr
@@ -139,7 +149,7 @@ function JSONComponent() {
       <div className="json-raw-format">
         {/* {formatJSONObj(didLoad.red, didLoad.blue, opt)} */}
         <ReactJson 
-          src={formatJSONObj(didLoad.red, didLoad.blue, opt)} 
+          src={formatJSONObj(didLoad.red, didLoad.blue, didLoad.meta, opt)} 
           indentWidth={2} 
           collapsed={true}
           style={{"fontSize": "1rem"}}/>

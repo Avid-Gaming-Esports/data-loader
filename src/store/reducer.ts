@@ -201,6 +201,18 @@ const initialState: gameState = {
     timeline: pHTimeline,
     teamId: "blue"
   }],
+  meta: {
+    gameCreation: 0,
+    gameDuration: 0,
+    gameId: 0,
+    gameMode: "",
+    gameType: "",
+    gameVersion: "",
+    mapId: 0,
+    platformId: "1",
+    queueId: 0,
+    seasonId: 0
+  },
   raw: JSON.stringify(""),
   onView: false
 }
@@ -211,12 +223,12 @@ const reducer = (
 ): gameState => {
   switch (action.type) {
     case actionTypes.UPDATE_INFO:
-      // console.log(action.payload)
-      if (action.payload.blue && action.payload.red) {
+      if (action.payload.blue && action.payload.red && action.payload.meta) {
         return {
           ...state,
           blue: action.payload.blue, 
           red: action.payload.red,
+          meta: action.payload.meta,
           raw: JSON.stringify(action.payload.raw),
         }
       } else {
@@ -230,16 +242,6 @@ const reducer = (
         ...state,
         onView: action.payload.onView,
       }
-    // case actionTypes.UPDATE_PRESET:
-    //   return {
-    //     ...state,
-    //     preset: action.payload.preset,
-    //   }
-    // case actionTypes.UPDATE_OUTPUT:
-    //   return {
-    //     ...state,
-    //     outputTypes: action.payload.outputTypes
-    //   }
   }
   return state;
 }

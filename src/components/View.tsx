@@ -49,6 +49,7 @@ function View() {
                   blue: didLoad.blue,
                   red: didLoad.red,
                   raw: didLoad.raw,
+                  meta: didLoad.meta,
                   onView: true
                 }))}}>
                 Generate Data

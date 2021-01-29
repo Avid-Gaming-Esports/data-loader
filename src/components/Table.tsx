@@ -36,32 +36,38 @@ const toEdit = cellEditFactory({
 
 const onBlueChange = (_type: any, newState: any, 
     base: gameState, dispatch: Dispatch) => {
-  base.red[parseInt(newState.cellEdit.rowId)-6].timeline.lane = 
-    newState.cellEdit.newValue;
-  base.red[parseInt(newState.cellEdit.rowId)-6].timeline.role = 
-    Constants.COL_ROLE_MAP[newState.cellEdit.newValue];
-  const toUpdate : gameState = {
-    blue: base.blue,
-    red: base.red,
-    raw: base.raw,
-    onView: false
+  if(newState.cellEdit.dataField === "bpos") {
+    base.blue[parseInt(newState.cellEdit.rowId)-1].timeline.lane = 
+      newState.cellEdit.newValue;
+    base.blue[parseInt(newState.cellEdit.rowId)-1].timeline.role = 
+      Constants.COL_ROLE_MAP[newState.cellEdit.newValue];
+    const toUpdate : gameState = {
+      blue: base.blue,
+      red: base.red,
+      meta: base.meta,
+      raw: base.raw,
+      onView: false
+    }
+    dispatch(putGameID(toUpdate));
   }
-  dispatch(putGameID(toUpdate));
 };
 
-const onRedChange = (_type: any, newState: any, 
-    base: gameState, dispatch: Dispatch) => {
-  base.blue[parseInt(newState.cellEdit.rowId)-1].timeline.lane = 
-    newState.cellEdit.newValue;
-  base.blue[parseInt(newState.cellEdit.rowId)-1].timeline.role = 
-    Constants.COL_ROLE_MAP[newState.cellEdit.newValue];
-  const toUpdate : gameState = {
-    blue: base.blue,
-    red: base.red,
-    raw: base.raw,
-    onView: false
+const onRedChange = (_type: any, newState: any,
+  base: gameState, dispatch: Dispatch) => {
+  if (newState.cellEdit.dataField === "rpos") {
+    base.red[parseInt(newState.cellEdit.rowId)-6].timeline.lane =
+      newState.cellEdit.newValue;
+    base.red[parseInt(newState.cellEdit.rowId)-6].timeline.role =
+      Constants.COL_ROLE_MAP[newState.cellEdit.newValue];
+    const toUpdate: gameState = {
+      blue: base.blue,
+      red: base.red,
+      meta: base.meta,
+      raw: base.raw,
+      onView: false
+    }
+    dispatch(putGameID(toUpdate));
   }
-  dispatch(putGameID(toUpdate));
 };
 
 function formatKDA(Player: PlayerData) {
@@ -251,7 +257,7 @@ function Table({side} : TableProps) {
           cellEdit: true
         } }
         onTableChange={(type: any, newState: any) => {
-          onBlueChange(type, newState, raw, dispatch)
+          onRedChange(type, newState, raw, dispatch)
         }}/> : 
       <BootstrapTable 
         keyField='bid' 
@@ -262,7 +268,7 @@ function Table({side} : TableProps) {
           cellEdit: true
         } }
         onTableChange={(type: any, newState: any) => {
-          onRedChange(type, newState, raw, dispatch)
+          onBlueChange(type, newState, raw, dispatch)
         }}/>
       
   );

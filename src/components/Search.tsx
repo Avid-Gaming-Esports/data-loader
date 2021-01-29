@@ -10,6 +10,7 @@ import { putGameID } from '../store/actionCreators';
 import { Constants } from './Constants';
 
 import '../style/View.css';
+import Metadata from './Metadata';
 
 var champMap = require('../champion.json');
 var ssMap = require('../summoner-spells.json');
@@ -36,7 +37,7 @@ function Search() {
     axios.post("http://localhost:5000/api", {
       gameID: matchID
     }).then((res) => {
-      // console.log(res.data);
+      console.log(res.data);
       res.data.participants = res.data.participants.map((key : any) => {
         key.teamId = Constants.TEAM_MAP[key.teamId]
         if(champKeys.includes(key.championId)) {
@@ -73,9 +74,23 @@ function Search() {
         .filter((player: PlayerData) => player.teamId === "red");
       let pullBlue = res.data.participants
         .filter((player: PlayerData) => player.teamId === "blue");
+      let md : Metadata = { 
+        gameCreation: res.data.gameCreation,
+        gameDuration: res.data.gameDuration,
+        gameId: res.data.gameId,
+        gameMode: res.data.gameMode,
+        gameType: res.data.gameType,
+        gameVersion: res.data.gameVersion,
+        mapId: res.data.mapId,
+        platformId: res.data.platformId,
+        queueId: res.data.queueId,
+        seasonId: res.data.seasonId,
+      }
+      console.log(md);
       const toUpdate : gameState = {
         blue: pullBlue,
         red: pullRed,
+        meta: md,
         raw: JSON.stringify(res.data),
         onView: false
       }
