@@ -10,11 +10,13 @@ import { putGameID } from '../store/actionCreators';
 import { Constants } from './Constants';
 
 import '../style/View.css';
-import Metadata from './Metadata';
+// import Metadata from './Metadata';
 
 var champMap = require('../champion.json');
 var ssMap = require('../summoner-spells.json');
 var itemMap = require('../item.json').data;
+var queueMap = require('../queues.json');
+var mapsMap = require('../maps.json');
 
 function Search() {
   const dispatch: Dispatch<any> = useDispatch();
@@ -32,12 +34,23 @@ function Search() {
     ssTransform[ssMap[idNugget].id] = ssMap[idNugget].name
   }
   let itemKeys = Object.keys(itemMap);
+  let queueTransform : {[key: number] : any} = { };
+  for (let queueNugget in queueMap) {
+    if (queueMap[queueNugget].queueId === 0) {
+      queueTransform[queueMap[queueNugget].queueId] = "Custom games"
+    } else {
+      queueTransform[queueMap[queueNugget].queueId] = queueMap[queueNugget].description
+    }
+  }
+  let mapTransform : {[key: number] : any} = { };
+  for (let mapNugget in mapsMap) {
+    mapTransform[mapsMap[mapNugget].mapId] = mapsMap[mapNugget].mapName + " " + mapsMap[mapNugget].notes
+  }
 
   let callApi = async () => {
     axios.post("http://localhost:5000/api", {
       gameID: matchID
     }).then((res) => {
-      console.log(res.data);
       res.data.participants = res.data.participants.map((key : any) => {
         key.teamId = Constants.TEAM_MAP[key.teamId]
         if(champKeys.includes(key.championId)) {
@@ -81,12 +94,11 @@ function Search() {
         gameMode: res.data.gameMode,
         gameType: res.data.gameType,
         gameVersion: res.data.gameVersion,
-        mapId: res.data.mapId,
+        mapId: mapTransform[res.data.mapId],
         platformId: res.data.platformId,
-        queueId: res.data.queueId,
+        queueId: queueTransform[res.data.queueId],
         seasonId: res.data.seasonId,
       }
-      console.log(md);
       const toUpdate : gameState = {
         blue: pullBlue,
         red: pullRed,

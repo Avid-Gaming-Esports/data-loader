@@ -35,12 +35,15 @@ function Metadata() {
         <div>
         <Form.Group className="md-group">
           {Object.values(md).map((sub_key, sub_val) => {
-            console.log(sub_key.toString())
+            // console.log(sub_key.toString())
             return (
             <div 
             key={"metaID" + sub_val}>
+              {Constants.METADATA_EDIT_MAP[keys[sub_val]] ? (
+              <div>
             <Form.Label>{keys[sub_val]}</Form.Label>
             <Form.Control
+              as="textarea"
               value={sub_key.toString()}
               id={"metaOption" + sub_val.toString()}
               disabled={!Constants.METADATA_EDIT_MAP[keys[sub_val]]}
@@ -48,7 +51,13 @@ function Metadata() {
                 // TODO
                 // console.log(e.target.value);
               }}
-            />
+            /></div>) : <div><Form.Label>{keys[sub_val]}</Form.Label>
+            <Form.Control
+              as="textarea"
+              value={sub_key.toString()}
+              id={"metaOption" + sub_val.toString()}
+              disabled={true}
+            /></div> }
             </div>)
           })}
           </Form.Group>

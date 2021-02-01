@@ -8,6 +8,9 @@ const initialState: optState = {
     "CSV": true,
     "CSV-Headless": true
   },
+  gameOpt: [{"gameCreation": false}, {"gameDuration": false}, {"gameId": false}, {"gameMode": false},
+  {"gameType": false}, {"gameVersion": false}, {"mapId": false}, {"platformId": false}, 
+  {"queueId": false},{"seasonId": false}],
   generalOpt: [{"participantId": true}, {"teamId": true}, {"championId": true}, 
   {"spell1Id": true}, {"spell2Id": true}],
   statOpt: [{"win": false}, {"item0": false}, {"item1": false}, {"item2": false}, {"item3": false}, 
@@ -35,8 +38,8 @@ const initialState: optState = {
   {"perk5Var3": false}, {"perkPrimaryStyle": false}, {"perkSubStyle": false}, {"statPerk0": false}, {"statPerk1": false}, 
   {"statPerk2": false}],
   timelineOpt: [{"creepsPerMinDeltas": false}, {"xpPerMinDeltas": false}, {"goldPerMinDeltas": false}, {"csDiffPerMinDeltas": false}, 
-  {"xpDiffPerMinDeltas": false}, {"damageTakenPerMinDeltas": false}, {"damageTakenDiffPerMinDeltas": false}, {"role": false}, 
-  {"lane": false}]
+  {"xpDiffPerMinDeltas": false}, {"damageTakenPerMinDeltas": false}, {"damageTakenDiffPerMinDeltas": false}, {"role": true}, 
+  {"lane": true}]
 }
 
 const optReducer = (
@@ -45,6 +48,13 @@ const optReducer = (
 ): optState => {
   switch (action.type) {
     case actionTypes.UPDATE_PRESET:
+      let newGen = state.generalOpt
+      newGen = newGen?.map((key, _value) => {
+        if(action.payload.preset) {
+          key[Object.keys(key)[0]] = action.payload.preset.includes(Object.keys(key)[0])
+        }
+        return key
+      })
       let newStat = state.statOpt
       newStat = newStat?.map((key, _value) => {
         if(action.payload.preset) {
@@ -52,8 +62,8 @@ const optReducer = (
         }
         return key
       })
-      let newGen = state.generalOpt
-      newGen = newGen?.map((key, _value) => {
+      let newTl = state.timelineOpt
+      newTl = newTl?.map((key, _value) => {
         if(action.payload.preset) {
           key[Object.keys(key)[0]] = action.payload.preset.includes(Object.keys(key)[0])
         }
@@ -63,7 +73,8 @@ const optReducer = (
         ...state,
         preset: action.payload.preset,
         generalOpt: newGen,
-        statOpt: newStat
+        statOpt: newStat,
+        timelineOpt: newTl
       }
     case actionTypes.UPDATE_OUTPUT:
       return {

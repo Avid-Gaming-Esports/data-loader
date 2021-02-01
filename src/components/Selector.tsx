@@ -63,6 +63,7 @@ function Selector() {
   const dispatch: Dispatch<any> = useDispatch();
   const store = useSelector((state: RootState) => state.opt);
   const [outputExpander, setOutputExpander] = useState("+");
+  const [gameExpander, setGameExpander] = useState("+");
   const [generalExpander, setGeneralExpander] = useState("+");
   const [statExpander, setStatExpander] = useState("+");
   const [timeExpander, setTimeExpander] = useState("+");
@@ -175,10 +176,56 @@ function Selector() {
     <Card>
       <Accordion as={Card.Header}>
       <Card className="group-by">
+        Game
+        <Accordion.Toggle 
+        as={Card} 
+        eventKey="2" 
+        className="group-by-expander"
+        onClick={(_e) => {
+            if (gameExpander === "+"){
+              setGameExpander("-");
+            } else {
+              setGameExpander("+");
+            }
+          }}>
+            {gameExpander}
+        </Accordion.Toggle>
+      </Card>
+      <Accordion.Collapse eventKey="2">
+      <div>
+      <Form.Group className="radios">
+        {store.gameOpt?.map((key, val) => {
+          return (
+            <Form.Check
+              type="checkbox"
+              label={Object.keys(key)[0]}
+              name="gameOption"
+              id={"gameOption" + val.toString()}
+              key={val}
+              className="radio-option"
+              checked={key[Object.keys(key)[0]]}
+              onChange={(_e) => {
+                let index;
+                if(store.gameOpt) {
+                  index = store.gameOpt[val];
+                  index[Object.keys(index)[0]] = !index[Object.keys(index)[0]]
+                }
+                handleChangeSelectors(dispatch, store);
+              }}
+            />)
+          })}
+      </Form.Group>
+      </div>
+      </Accordion.Collapse>
+      </Accordion>
+    </Card>
+    <Card>
+      <Accordion as={Card.Header}>
+      <Card className="group-by">
         Player (General)
         <Accordion.Toggle 
         as={Card} 
-        eventKey="1" 
+        eventKey="3" 
         className="group-by-expander"
         onClick={(_e) => {
             if (generalExpander === "+"){
@@ -190,7 +237,7 @@ function Selector() {
             {generalExpander}
         </Accordion.Toggle>
       </Card>
-      <Accordion.Collapse eventKey="1">
+      <Accordion.Collapse eventKey="3">
       <div>
       <Form.Group className="radios">
         {store.generalOpt?.map((key, val) => {
@@ -234,7 +281,7 @@ function Selector() {
           />
           <Accordion.Toggle 
           as={Card} 
-          eventKey="2" 
+          eventKey="4" 
           className="group-by-expander"
           onClick={(_e) => { (statExpander === "+") ?
             setStatExpander("-") : setStatExpander("+");
@@ -242,7 +289,7 @@ function Selector() {
               {statExpander}
           </Accordion.Toggle>
         </Card>
-        <Accordion.Collapse eventKey="2" >
+        <Accordion.Collapse eventKey="4" >
         <div>
         <Form.Group className="radios">
           {store.statOpt?.map((key, val) => {
@@ -286,7 +333,7 @@ function Selector() {
           />
           <Accordion.Toggle 
           as={Card} 
-          eventKey="2" 
+          eventKey="5" 
           className="group-by-expander"
           onClick={(_e) => { (timeExpander === "+") ?  
           setTimeExpander("-") : setTimeExpander("+");
@@ -294,7 +341,7 @@ function Selector() {
               {timeExpander}
           </Accordion.Toggle>
         </Card>
-        <Accordion.Collapse eventKey="2" >
+        <Accordion.Collapse eventKey="5" >
         <div>
         <Form.Group className="radios">
           {store.timelineOpt?.map((key, val) => {

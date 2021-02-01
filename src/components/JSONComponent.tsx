@@ -17,23 +17,22 @@ function formatJSONObj(rPlayers: PlayerData[], bPlayers: PlayerData[],
   meta: Metadata, store: optState) {
   let timeObj = rPlayers[0].timeline
   let participantArr : any[] = []
-  let retObj = {
-    gameCreation: meta.gameCreation,
-    gameDuration: meta.gameDuration,
-    gameId: meta.gameId,
-    gameMode: meta.gameMode,
-    gameType: meta.gameType,
-    gameVersion: meta.gameVersion,
-    mapId: meta.mapId,
-    platformId: meta.platformId,
-    queueId: meta.queueId,
-    seasonId: meta.seasonId,
-    participants: {
-      red: participantArr,
-      blue: participantArr
+  let retObj : {[key: string] : any} = { };
+  let gameKeys : {[key: string] : boolean} = { };
+  if(store.gameOpt) {
+    for(let i = 0; i < Object.keys(store.gameOpt).length; i++) {
+      gameKeys[Object.keys(store.gameOpt[i])[0]] = Object.values(store.gameOpt[i])[0]
     }
+  }
+  Object.values(meta).forEach((val, idx) => {
+    if(gameKeys[Object.keys(gameKeys)[idx]]) {
+      retObj[Object.keys(gameKeys)[idx]] = val;
+    }
+  })
+  retObj.participants = {
+    red: participantArr,
+    blue: participantArr
   };
-  
   let genKeys : {[key: string] : number} = { };
   if(store.generalOpt) {
     for(let i = 0; i < Object.keys(store.generalOpt).length; i++) {

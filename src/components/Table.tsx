@@ -55,6 +55,7 @@ const onBlueChange = (_type: any, newState: any,
 const onRedChange = (_type: any, newState: any,
   base: gameState, dispatch: Dispatch) => {
   if (newState.cellEdit.dataField === "rpos") {
+    console.log(parseInt(newState.cellEdit.rowId)-6);
     base.red[parseInt(newState.cellEdit.rowId)-6].timeline.lane =
       newState.cellEdit.newValue;
     base.red[parseInt(newState.cellEdit.rowId)-6].timeline.role =
@@ -66,6 +67,7 @@ const onRedChange = (_type: any, newState: any,
       raw: base.raw,
       onView: false
     }
+    console.log(base.red);
     dispatch(putGameID(toUpdate));
   }
 };

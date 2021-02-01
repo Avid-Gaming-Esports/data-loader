@@ -29,6 +29,7 @@ type gameState = {
 type optState = {
   preset?: string[],
   outputTypes?: {[key: string] : boolean},
+  gameOpt?: {[key: string] : boolean}[],
   generalOpt?: {[key: string] : boolean}[],
   statOpt?: {[key: string] : boolean}[],
   timelineOpt?: {[key: string] : boolean}[]

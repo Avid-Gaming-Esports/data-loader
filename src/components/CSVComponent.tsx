@@ -16,7 +16,7 @@ function swap(arr: any[], idx1: number, idx2: number) {
   arr[idx2] = tmp;
 }
 
-function formatLine(value: PlayerData, store: optState) {
+function formatLine(value: PlayerData, meta: Metadata, store: optState) {
   let statObj : Stats = value.stats;
   let timeObj : Timeline = value.timeline;
 
@@ -39,6 +39,13 @@ function formatLine(value: PlayerData, store: optState) {
       timeKeys[Object.keys(store.timelineOpt[i])[0]] = idx
     }
   }
+  let gameStr = Object.values(meta).map((key, val) => {
+    if (store.gameOpt && 
+      store.gameOpt[val][Object.keys(store.gameOpt[val])[0]]) {
+      return key.toString() + ",";
+    }
+    return "";
+  })
   let pre = Object.values(value).map((key, val) => {
     if(typeof(key) !== "object") {
       let idx = genKeys[Object.keys(value)[val]]
@@ -94,11 +101,11 @@ function formatLine(value: PlayerData, store: optState) {
     }
     return "";
   });
-  return (pre.join('') + 
+  return (gameStr.join('') + pre.join('') + 
     statStr.join('') + timeStr.join('')).slice(0, -1);
 }
 
-function formatHeader(value: PlayerData, store: optState) {
+function formatHeader(value: PlayerData, meta: Metadata, store: optState) {
   let statObj : Stats = value.stats;
   let timeObj : Timeline = value.timeline;
 
@@ -115,6 +122,13 @@ function formatHeader(value: PlayerData, store: optState) {
       timeKeys[Object.keys(store.timelineOpt[i])[0]] = idx
     }
   }
+  let gameStr = Object.keys(meta).map((key, val) => {
+    if (store.gameOpt && 
+      store.gameOpt[val][key]) {
+      return key.toString() + ",";
+    }
+    return "";
+  })
   let pre = Object.keys(value).map((key, val) => {
     if(typeof(key) !== "object" && Object.keys(genKeys).includes(key) 
       && store.generalOpt && store.generalOpt[genKeys[key]][key]) {
@@ -165,7 +179,8 @@ function formatHeader(value: PlayerData, store: optState) {
     }
     return "";
   });
-  return (pre.join('') + statStr.join('') + timeStr.join('')).slice(0, -1);
+  return (gameStr.join('') + pre.join('') + statStr.join('') + 
+  timeStr.join('')).slice(0, -1);
 }
 
 function CSVComponent(props: CSVProps) {
@@ -175,11 +190,11 @@ function CSVComponent(props: CSVProps) {
     <Alert show={true} variant="dark" className="csv-alert">
       <Alert.Heading>{props.headless ? "CSV (Headless)" : "CSV"}</Alert.Heading>
       <div className="csv-raw-format">
-        {props.headless ? "" : <span>{didLoad.red ? formatHeader(didLoad.red[0], opt) : "ERROR"} <br /></span>}
+        {props.headless ? "" : <span>{didLoad.red ? formatHeader(didLoad.red[0], didLoad.meta, opt) : "ERROR"} <br /></span>}
         {didLoad.red ? didLoad.red.map((value: PlayerData, idx: number) => 
-          <span key={idx}>{formatLine(value, opt)} <br /></span>) : <span></span>}
+          <span key={idx}>{formatLine(value, didLoad.meta, opt)} <br /></span>) : <span></span>}
         {didLoad.blue ? didLoad.blue.map((value: PlayerData, idx: number) => 
-          <span key={idx}>{formatLine(value, opt)} <br /></span>) : <span></span>}
+          <span key={idx}>{formatLine(value, didLoad.meta, opt)} <br /></span>) : <span></span>}
       </div>
     </Alert>
   );
