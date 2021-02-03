@@ -1,6 +1,6 @@
 export abstract class Constants {
   static readonly PRESET_ARRAYS: {[key: string] : string[]} = {
-    "minimal": ["participantId", "championId", "spell1Id", "spell2Id", "teamId", "role", "lane"],
+    "minimal": ["gameId", "participantId", "championId", "spell1Id", "spell2Id", "teamId", "lane"],
     "advanced": ["participantId", "championId", "assists", "champLevel", "damageDealtToObjectives", 
     "damageDealtToTurrets", "damageSelfMitigated", "deaths", "goldEarned", "goldSpent", "item0", 
     "item1", "item2", "item3", "item4", "item5", "item6", "kills", "magicDamageDealt", 
@@ -38,15 +38,15 @@ export abstract class Constants {
     "SUPPORT": "DUO_SUPPORT"
   }
   static readonly METADATA_EDIT_MAP: {[key: string] : boolean} = {
-    "gameCreation": true, 
-    "gameDuration": true, 
+    "gameCreation": false, 
+    "gameDuration": false, 
     "gameId": false, 
-    "gameMode": false, 
+    "gameMode": true, 
     "gameType": true, 
     "gameVersion": false, 
     "mapId": false, 
     "platformId": false, 
     "queueId": false, 
-    "seasonId": false
+    "seasonId": true
   }
 }

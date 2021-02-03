@@ -18,6 +18,11 @@ var itemMap = require('../item.json').data;
 var queueMap = require('../queues.json');
 var mapsMap = require('../maps.json');
 
+var moment = require("moment");
+var momentDurationFormatSetup = require("moment-duration-format");
+
+momentDurationFormatSetup(moment);
+
 function Search() {
   const dispatch: Dispatch<any> = useDispatch();
   const [matchID, setMatchID] = useState(0);
@@ -83,13 +88,61 @@ function Search() {
         }
         return key
       })
+      res.data.participants.forEach((entry: any) => {
+        entry.account = { }
+      })
       let pullRed = res.data.participants
         .filter((player: PlayerData) => player.teamId === "red");
       let pullBlue = res.data.participants
         .filter((player: PlayerData) => player.teamId === "blue");
+
+      let redIds = pullRed.map((player: PlayerData) => {
+        return player.participantId;
+      });
+
+      res.data.participantIdentities.forEach((entry: any) => {
+        if (redIds.includes(entry.participantId)) {
+          if(entry.player === undefined) {
+            pullRed[entry.participantId-(redIds.length+1)].account = {
+              participantId: entry.participantId,
+              player: {
+                profileIcon: 3712,
+                accountId: "UNKNOWN",
+                matchHistoryUri: "UNKNOWN",
+                currentAccountId: "UNKNOWN", 
+                currentPlatformId: "UNKNOWN",
+                summonerName: "Player " + entry.participantId.toString(),
+                summonerId: "UNKNOWN",
+                platformId: "UNKNOWN"
+              }
+            }
+          } else {
+            pullRed[entry.participantId-(redIds.length+1)].account = entry
+          }
+        } else {
+          if(entry.player === undefined) {
+            pullBlue[entry.participantId-1].account = {
+              participantId: entry.participantId,
+              player: {
+                profileIcon: 3712,
+                accountId: "UNKNOWN",
+                matchHistoryUri: "UNKNOWN",
+                currentAccountId: "UNKNOWN", 
+                currentPlatformId: "UNKNOWN",
+                summonerName: "Player " + entry.participantId.toString(),
+                summonerId: "UNKNOWN",
+                platformId: "UNKNOWN"
+              }
+            }
+          } else {
+            pullBlue[entry.participantId-1].account = entry
+          }
+        }
+      })
+      
       let md : Metadata = { 
-        gameCreation: res.data.gameCreation,
-        gameDuration: res.data.gameDuration,
+        gameCreation: moment(res.data.gameCreation).format('MMMM Do YYYY, H:mm:ss'),
+        gameDuration: moment.duration(res.data.gameDuration, "seconds").format("h:mm:ss"),
         gameId: res.data.gameId,
         gameMode: res.data.gameMode,
         gameType: res.data.gameType,

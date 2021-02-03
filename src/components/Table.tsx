@@ -36,40 +36,53 @@ const toEdit = cellEditFactory({
 
 const onBlueChange = (_type: any, newState: any, 
     base: gameState, dispatch: Dispatch) => {
-  if(newState.cellEdit.dataField === "bpos") {
-    base.blue[parseInt(newState.cellEdit.rowId)-1].timeline.lane = 
-      newState.cellEdit.newValue;
-    base.blue[parseInt(newState.cellEdit.rowId)-1].timeline.role = 
-      Constants.COL_ROLE_MAP[newState.cellEdit.newValue];
-    const toUpdate : gameState = {
-      blue: base.blue,
-      red: base.red,
-      meta: base.meta,
-      raw: base.raw,
-      onView: false
-    }
-    dispatch(putGameID(toUpdate));
+  switch(newState.cellEdit.dataField) {
+    case "bpos":
+      base.blue[parseInt(newState.cellEdit.rowId)-1].timeline.lane = 
+        newState.cellEdit.newValue;
+      base.blue[parseInt(newState.cellEdit.rowId)-1].timeline.role = 
+        Constants.COL_ROLE_MAP[newState.cellEdit.newValue];
+      break;
+    case "bname":
+      base.blue[parseInt(newState.cellEdit.rowId)-1].account.player.summonerName = 
+        newState.cellEdit.newValue;
+      break;
   }
+  const toUpdate : gameState = {
+    blue: base.blue,
+    red: base.red,
+    meta: base.meta,
+    raw: base.raw,
+    onView: false
+  }
+  dispatch(putGameID(toUpdate));
 };
 
 const onRedChange = (_type: any, newState: any,
   base: gameState, dispatch: Dispatch) => {
-  if (newState.cellEdit.dataField === "rpos") {
-    console.log(parseInt(newState.cellEdit.rowId)-6);
-    base.red[parseInt(newState.cellEdit.rowId)-6].timeline.lane =
-      newState.cellEdit.newValue;
-    base.red[parseInt(newState.cellEdit.rowId)-6].timeline.role =
-      Constants.COL_ROLE_MAP[newState.cellEdit.newValue];
-    const toUpdate: gameState = {
-      blue: base.blue,
-      red: base.red,
-      meta: base.meta,
-      raw: base.raw,
-      onView: false
-    }
-    console.log(base.red);
-    dispatch(putGameID(toUpdate));
+  switch(newState.cellEdit.dataField) {
+    case "rpos":
+      console.log(parseInt(newState.cellEdit.rowId)-6);
+      base.red[parseInt(newState.cellEdit.rowId)-(base.red.length+1)].timeline.lane =
+        newState.cellEdit.newValue;
+      base.red[parseInt(newState.cellEdit.rowId)-(base.red.length+1)].timeline.role =
+        Constants.COL_ROLE_MAP[newState.cellEdit.newValue];
+      break;
+    case "rname":
+      base.red[parseInt(newState.cellEdit.rowId)-(base.red.length+1)].account.player.summonerName =
+        newState.cellEdit.newValue;
+      break;
   }
+  const toUpdate: gameState = {
+    blue: base.blue,
+    red: base.red,
+    meta: base.meta,
+    raw: base.raw,
+    onView: false
+  }
+  console.log(base.red);
+  dispatch(putGameID(toUpdate));
+  console.log(newState.cellEdit.dataField);
 };
 
 function formatKDA(Player: PlayerData) {
@@ -80,7 +93,7 @@ function formatKDA(Player: PlayerData) {
 }
 
 const blueColumns = [{
-  dataField: 'bid',
+  dataField: 'bname',
   text: 'TEAM 2',
   headerClasses: 'blue-header',
   classes: 'blue-cell'
@@ -145,11 +158,11 @@ const blueColumns = [{
 }];
 
 const redColumns = [{
-  dataField: 'rid',
+  dataField: 'rname',
   text: 'TEAM 1',
   headerClasses: 'red-header',
   classes: 'red-cell',
-  editable: false
+  editable: true
 }, {
   dataField: 'rpos',
   text: 'Role',
@@ -222,6 +235,7 @@ function Table({side} : TableProps) {
     .map((Player: PlayerData) => {
     return {
       bid: Player.participantId.toString(), 
+      bname: Player.account.player.summonerName,
       bpos: Player.timeline.lane,
       bpick: Player.championId,
       bkda: formatKDA(Player),
@@ -237,6 +251,7 @@ function Table({side} : TableProps) {
     .map((Player: PlayerData) => {
     return {
       rid: Player.participantId.toString(), 
+      rname: Player.account.player.summonerName,
       rpos: Player.timeline.lane,
       rpick: Player.championId,
       rkda: formatKDA(Player),

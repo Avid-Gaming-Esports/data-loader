@@ -13,6 +13,8 @@ const initialState: optState = {
   {"queueId": false},{"seasonId": false}],
   generalOpt: [{"participantId": true}, {"teamId": true}, {"championId": true}, 
   {"spell1Id": true}, {"spell2Id": true}],
+  accountOpt: [{"platformId": false}, {"accountId": false}, {"summonerName": true}, {"summonerId": false}, 
+  {"currentAccountId": false}, {"currentPlatformId": false}, {"matchHistoryUri": false}, {"profileIcon": false}],
   statOpt: [{"win": false}, {"item0": false}, {"item1": false}, {"item2": false}, {"item3": false}, 
   {"item4": false}, {"item5": false}, {"item6": false}, {"kills": false}, {"deaths": false}, 
   {"assists": false}, {"largestKillingSpree": false}, {"largestMultiKill": false}, {"killingSprees": false}, 
@@ -38,7 +40,7 @@ const initialState: optState = {
   {"perk5Var3": false}, {"perkPrimaryStyle": false}, {"perkSubStyle": false}, {"statPerk0": false}, {"statPerk1": false}, 
   {"statPerk2": false}],
   timelineOpt: [{"creepsPerMinDeltas": false}, {"xpPerMinDeltas": false}, {"goldPerMinDeltas": false}, {"csDiffPerMinDeltas": false}, 
-  {"xpDiffPerMinDeltas": false}, {"damageTakenPerMinDeltas": false}, {"damageTakenDiffPerMinDeltas": false}, {"role": true}, 
+  {"xpDiffPerMinDeltas": false}, {"damageTakenPerMinDeltas": false}, {"damageTakenDiffPerMinDeltas": false}, {"role": false}, 
   {"lane": true}]
 }
 

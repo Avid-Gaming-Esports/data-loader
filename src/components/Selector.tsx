@@ -267,6 +267,52 @@ function Selector() {
     </Card>
     <Card>
       <Accordion as={Card.Header}>
+      <Card className="group-by">
+        Player (Account)
+        <Accordion.Toggle 
+        as={Card} 
+        eventKey="3" 
+        className="group-by-expander"
+        onClick={(_e) => {
+            if (generalExpander === "+"){
+              setGeneralExpander("-");
+            } else {
+              setGeneralExpander("+");
+            }
+          }}>
+            {generalExpander}
+        </Accordion.Toggle>
+      </Card>
+      <Accordion.Collapse eventKey="3">
+      <div>
+      <Form.Group className="radios">
+        {store.accountOpt?.map((key, val) => {
+          return (
+            <Form.Check
+              type="checkbox"
+              label={Object.keys(key)[0]}
+              name="accOption"
+              id={"accOption" + val.toString()}
+              key={val}
+              className="radio-option"
+              checked={key[Object.keys(key)[0]]}
+              onChange={(_e) => {
+                let index;
+                if(store.accountOpt) {
+                  index = store.accountOpt[val];
+                  index[Object.keys(index)[0]] = !index[Object.keys(index)[0]]
+                }
+                handleChangeSelectors(dispatch, store);
+              }}
+            />)
+          })}
+      </Form.Group>
+      </div>
+      </Accordion.Collapse>
+      </Accordion>
+    </Card>
+    <Card>
+      <Accordion as={Card.Header}>
         <Card className="group-by">
           <Form.Check
             type="checkbox"

@@ -31,6 +31,7 @@ type optState = {
   outputTypes?: {[key: string] : boolean},
   gameOpt?: {[key: string] : boolean}[],
   generalOpt?: {[key: string] : boolean}[],
+  accountOpt?: {[key: string] : boolean}[],
   statOpt?: {[key: string] : boolean}[],
   timelineOpt?: {[key: string] : boolean}[]
 }
@@ -59,8 +60,8 @@ type optData = {
 }
 
 type Metadata = {
-  gameCreation: number,
-  gameDuration: number,
+  gameCreation: string,
+  gameDuration: string,
   gameId: number,
   gameMode: string,
   gameType: string,
@@ -76,9 +77,24 @@ type PlayerData = {
   participantId: number,
   spell1Id: string,
   spell2Id: string,
+  teamId: string,
+  account: PlayerAccount,
   stats: Stats,
-  timeline: Timeline,
-  teamId: string
+  timeline: Timeline
+}
+
+type PlayerAccount = {
+  participantId: number,
+  player: {
+    accountId: string,
+    currentAccountId: string,
+    currentPlatformId: string,
+    matchHistoryUri: string,
+    platformId: string,
+    profileIcon: number
+    summonerId: string,
+    summonerName: string
+  }
 }
 
 type Stats = {

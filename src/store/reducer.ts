@@ -1,4 +1,8 @@
 import * as actionTypes from "./actionTypes";
+var moment = require("moment");
+var momentDurationFormatSetup = require("moment-duration-format");
+
+momentDurationFormatSetup(moment);
 
 const pHStats: Stats = {
   assists: 0,
@@ -118,8 +122,23 @@ const pHTimeline: Timeline = {
   xpPerMinDeltas: {}
 }
 
+const phAccount: PlayerAccount = {
+  participantId: 0,
+  player: {
+    profileIcon: 0,
+    accountId: "",
+    matchHistoryUri: "",
+    currentAccountId: "", 
+    currentPlatformId: "",
+    summonerName: "",
+    summonerId: "",
+    platformId: ""
+  }
+}
+
 const initialState: gameState = {
   blue: [{
+    account: phAccount,
     championId: "Aatrox",
     participantId: 1,
     spell1Id: "Flash",
@@ -128,6 +147,7 @@ const initialState: gameState = {
     timeline: pHTimeline,
     teamId: "red"
   },{
+    account: phAccount,
     championId: "Aatrox",
     participantId: 2,
     spell1Id: "Flash",
@@ -136,6 +156,7 @@ const initialState: gameState = {
     timeline: pHTimeline,
     teamId: "red"
   },{
+    account: phAccount,
     championId: "Aatrox",
     participantId: 3,
     spell1Id: "Flash",
@@ -144,6 +165,7 @@ const initialState: gameState = {
     timeline: pHTimeline,
     teamId: "red"
   },{
+    account: phAccount,
     championId: "Aatrox",
     participantId: 4,
     spell1Id: "Flash",
@@ -152,6 +174,7 @@ const initialState: gameState = {
     timeline: pHTimeline,
     teamId: "red"
   },{
+    account: phAccount,
     championId: "Aatrox",
     participantId: 5,
     spell1Id: "Flash",
@@ -161,6 +184,7 @@ const initialState: gameState = {
     teamId: "red"
   }],
   red: [{
+    account: phAccount,
     championId: "Aatrox",
     participantId: 6,
     spell1Id: "Flash",
@@ -169,6 +193,7 @@ const initialState: gameState = {
     timeline: pHTimeline,
     teamId: "blue"
   },{
+    account: phAccount,
     championId: "Aatrox",
     participantId: 7,
     spell1Id: "Flash",
@@ -177,6 +202,7 @@ const initialState: gameState = {
     timeline: pHTimeline,
     teamId: "blue"
   },{
+    account: phAccount,
     championId: "Aatrox",
     participantId: 8,
     spell1Id: "Flash",
@@ -185,6 +211,7 @@ const initialState: gameState = {
     timeline: pHTimeline,
     teamId: "blue"
   },{
+    account: phAccount,
     championId: "Aatrox",
     participantId: 9,
     spell1Id: "Flash",
@@ -193,6 +220,7 @@ const initialState: gameState = {
     timeline: pHTimeline,
     teamId: "blue"
   },{
+    account: phAccount,
     championId: "Aatrox",
     participantId: 10,
     spell1Id: "Flash",
@@ -202,8 +230,8 @@ const initialState: gameState = {
     teamId: "blue"
   }],
   meta: {
-    gameCreation: 0,
-    gameDuration: 0,
+    gameCreation: moment(1612310986).format('MM-DD-YYYY HH:mm:ss'),
+    gameDuration: moment.duration(0, "seconds").format("h:mm:ss"),
     gameId: 0,
     gameMode: "",
     gameType: "",

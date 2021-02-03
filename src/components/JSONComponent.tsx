@@ -39,6 +39,12 @@ function formatJSONObj(rPlayers: PlayerData[], bPlayers: PlayerData[],
       genKeys[Object.keys(store.generalOpt[i])[0]] = i
     }
   }
+  let accKeys : {[key: string] : number} = { };
+  if(store.accountOpt) {
+    for(let i = 0; i < Object.keys(store.accountOpt).length; i++) {
+      accKeys[Object.keys(store.accountOpt[i])[0]] = i
+    }
+  }
   let timeKeys : { [key: string] : number; } = { };
   if(store.timelineOpt) {
     for(let i = 0; i < Object.keys(store.timelineOpt).length; i++) {
@@ -66,6 +72,13 @@ function formatJSONObj(rPlayers: PlayerData[], bPlayers: PlayerData[],
         }
       }
     })
+    stripped["account"] = { }
+    Object.values(val.account.player).forEach((sub_key, sub_val) => {
+      if (store.accountOpt && 
+        Object.values(store.accountOpt[accKeys[Object.keys(val.account.player)[sub_val]]])[0]) {
+          stripped["account"][Object.keys(val.account.player)[sub_val]] = sub_key
+      }
+    });
     stripped["stats"] = { }
     Object.values(val.stats).forEach((sub_key, sub_val) => {
       if(sub_val === 0) {

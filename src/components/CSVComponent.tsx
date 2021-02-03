@@ -17,6 +17,7 @@ function swap(arr: any[], idx1: number, idx2: number) {
 }
 
 function formatLine(value: PlayerData, meta: Metadata, store: optState) {
+  let accountObj : PlayerAccount["player"] = value.account.player;
   let statObj : Stats = value.stats;
   let timeObj : Timeline = value.timeline;
 
@@ -32,6 +33,12 @@ function formatLine(value: PlayerData, meta: Metadata, store: optState) {
   //     statKeys[Object.keys(store.statOpt[i])[0]] = i
   //   }
   // }
+  let accKeys : {[key: string] : number} = { };
+  if(store.accountOpt) {
+    for(let i = 0; i < Object.keys(store.accountOpt).length; i++) {
+      accKeys[Object.keys(store.accountOpt[i])[0]] = i
+    }
+  }
   let timeKeys : { [key: string] : number; } = { };
   if(store.timelineOpt) {
     for(let i = 0; i < Object.keys(store.timelineOpt).length; i++) {
@@ -56,6 +63,14 @@ function formatLine(value: PlayerData, meta: Metadata, store: optState) {
     }
     return "";
   })
+  let accountStr = Object.values(accountObj).map((key, val) => {
+    if (store.accountOpt && 
+      Object.values(store.accountOpt[accKeys[Object.keys(accountObj)[val]]])[0]) {
+      // Fix line above later
+      return key.toString() + ",";
+    }
+    return "";
+  });
   let statStr = Object.values(statObj).map((key, val) => {
     if(val === 0) {
       return "";
@@ -101,11 +116,12 @@ function formatLine(value: PlayerData, meta: Metadata, store: optState) {
     }
     return "";
   });
-  return (gameStr.join('') + pre.join('') + 
+  return (gameStr.join('') + pre.join('') + accountStr.join('') +
     statStr.join('') + timeStr.join('')).slice(0, -1);
 }
 
 function formatHeader(value: PlayerData, meta: Metadata, store: optState) {
+  let accountObj : PlayerAccount["player"] = value.account.player;
   let statObj : Stats = value.stats;
   let timeObj : Timeline = value.timeline;
 
@@ -113,6 +129,12 @@ function formatHeader(value: PlayerData, meta: Metadata, store: optState) {
   if(store.generalOpt) {
     for(let i = 0; i < Object.keys(store.generalOpt).length; i++) {
       genKeys[Object.keys(store.generalOpt[i])[0]] = i
+    }
+  }
+  let accKeys : {[key: string] : number} = { };
+  if(store.accountOpt) {
+    for(let i = 0; i < Object.keys(store.accountOpt).length; i++) {
+      accKeys[Object.keys(store.accountOpt[i])[0]] = i
     }
   }
   let timeKeys : { [key: string] : number; } = { };
@@ -136,6 +158,14 @@ function formatHeader(value: PlayerData, meta: Metadata, store: optState) {
     }
     return "";
   })
+  let accountStr = Object.keys(accountObj).map((key, val) => {
+    if (store.accountOpt && 
+      Object.values(store.accountOpt[accKeys[Object.keys(accountObj)[val]]])[0]) {
+      // Fix line above later
+      return key.toString() + ",";
+    }
+    return "";
+  });
   let statStr = Object.keys(statObj).map((key, val) => {
     if(val === 0) {
       return "";
@@ -179,8 +209,8 @@ function formatHeader(value: PlayerData, meta: Metadata, store: optState) {
     }
     return "";
   });
-  return (gameStr.join('') + pre.join('') + statStr.join('') + 
-  timeStr.join('')).slice(0, -1);
+  return (gameStr.join('') + pre.join('') + accountStr.join('') + 
+  statStr.join('') + timeStr.join('')).slice(0, -1);
 }
 
 function CSVComponent(props: CSVProps) {
