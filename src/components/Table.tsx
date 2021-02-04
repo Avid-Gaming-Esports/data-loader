@@ -1,19 +1,20 @@
 import React from 'react';
+import { Image } from 'react-bootstrap';
 import { RiCoinsLine } from "react-icons/ri";
 import BootstrapTable from 'react-bootstrap-table-next';
 import { Dispatch } from 'redux';
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 // @ts-ignore
 import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
 
-import { putGameID } from '../store/actionCreators';
+import { updateRedPlayers, updateBluePlayers } from '../store/actionCreators';
 import { Constants } from './Constants';
 
-// import top from'../img/Position_Challenger-Top.png';
-// import jg from'../img/Position_Challenger-Jungle.png';
-// import mid from'../img/Position_Challenger-Mid.png';
-// import bot from'../img/Position_Challenger-Bot.png';
-// import supp from'../img/Position_Challenger-Support.png';
+import top from'../img/Position_Challenger-Top.png';
+import jg from'../img/Position_Challenger-Jungle.png';
+import mid from'../img/Position_Challenger-Mid.png';
+import bot from'../img/Position_Challenger-Bot.png';
+import supp from'../img/Position_Challenger-Support.png';
 
 import { RootState } from "../store/rootReducer";
 
@@ -22,6 +23,42 @@ import '../style/Table.css';
 type TableProps = {
   side: string
 }
+
+const imageMapper : {[key: string] : any} = {
+  "TOP" : top,
+  "JUNGLE" : jg,
+  "MIDDLE" : mid,
+  "BOTTOM": bot,
+  "SUPPORT": supp
+}
+
+function roleBlueFormatter(_cell: any, row: any) {
+  let image = imageMapper[row["bpos"]]
+  return (
+    <Image src={image} />
+  );
+}
+
+function roleRedFormatter(_cell: any, row: any) {
+  let image = imageMapper[row["rpos"]]
+  return (
+    <Image src={image} />
+  );
+}
+
+// function pickBlueFormatter(_cell: any, row: any) {
+//   let image = require('../img/champion/' + row["bpick"] + "_0.jpg")
+//   console.log(image);
+//   return (
+//     <Image src={image} />
+//   );
+// }
+// function pickRedFormatter(_cell: any, row: any) {
+//   let image = imageMapper[row["rpos"]]
+//   return (
+//     <Image src={image} />
+//   );
+// }
 
 const formatWithIcon = () => {
   return(
@@ -51,18 +88,19 @@ const onBlueChange = (_type: any, newState: any,
   const toUpdate : gameState = {
     blue: base.blue,
     red: base.red,
+    blueTeam: base.blueTeam,
+    redTeam: base.redTeam,
     meta: base.meta,
     raw: base.raw,
     onView: false
   }
-  dispatch(putGameID(toUpdate));
+  dispatch(updateBluePlayers(toUpdate));
 };
 
 const onRedChange = (_type: any, newState: any,
   base: gameState, dispatch: Dispatch) => {
   switch(newState.cellEdit.dataField) {
     case "rpos":
-      console.log(parseInt(newState.cellEdit.rowId)-6);
       base.red[parseInt(newState.cellEdit.rowId)-(base.red.length+1)].timeline.lane =
         newState.cellEdit.newValue;
       base.red[parseInt(newState.cellEdit.rowId)-(base.red.length+1)].timeline.role =
@@ -76,13 +114,13 @@ const onRedChange = (_type: any, newState: any,
   const toUpdate: gameState = {
     blue: base.blue,
     red: base.red,
+    blueTeam: base.blueTeam,
+    redTeam: base.redTeam,
     meta: base.meta,
     raw: base.raw,
     onView: false
   }
-  console.log(base.red);
-  dispatch(putGameID(toUpdate));
-  console.log(newState.cellEdit.dataField);
+  dispatch(updateRedPlayers(toUpdate));
 };
 
 function formatKDA(Player: PlayerData) {
@@ -92,16 +130,16 @@ function formatKDA(Player: PlayerData) {
   return kills + "/" + deaths + "/" + assists;
 }
 
-const blueColumns = [{
+let blueColumns = [{
   dataField: 'bname',
   text: 'TEAM 2',
   headerClasses: 'blue-header',
-  classes: 'blue-cell'
+  classes: 'blue-cell edit'
 }, {
   dataField: 'bpos',
   text: 'Role',
   headerClasses: 'blue-header center loader-pos',
-  classes: 'blue-cell center img-wrapper',
+  classes: 'blue-cell center img-wrapper edit',
   editor: {
     type: Type.SELECT,
     getOptions: (_setOptions : any, _vals: blueData) => {
@@ -123,51 +161,58 @@ const blueColumns = [{
       }];
     }
   },
+  formatter: roleBlueFormatter,
   editCellClasses: 'blue-cell'
 }, {
   dataField: 'bpick',
   text: 'Pick',
   headerClasses: 'blue-header center loader-pick',
-  classes: 'blue-cell center'
+  classes: 'blue-cell center',
+  editable: false
 }, {
   dataField: 'bkda',
   text: 'K/D/A',
   headerClasses: 'blue-header center loader-kda',
-  classes: 'blue-cell center'
+  classes: 'blue-cell center',
+  editable: false
 }, {
   dataField: 'bitems',
   text: 'Items',
   headerClasses: 'blue-header',
-  classes: 'blue-cell'
+  classes: 'blue-cell',
+  editable: false
 }, {
   dataField: 'bcs',
   text: 'CS',
   headerClasses: 'blue-header center loader-cs',
-  classes: 'blue-cell center'
+  classes: 'blue-cell center',
+  editable: false
 }, {
   dataField: 'bgold',
   text: "",
   headerClasses: 'blue-header center loader-gold',
   classes: 'blue-cell center',
-  headerFormatter: formatWithIcon
+  headerFormatter: formatWithIcon,
+  editable: false
 }, {
   dataField: 'bban',
   text: 'Ban',
   headerClasses: 'blue-header center loader-ban',
-  classes: 'blue-cell center'
+  classes: 'blue-cell center',
+  editable: false
 }];
 
-const redColumns = [{
+let redColumns = [{
   dataField: 'rname',
   text: 'TEAM 1',
   headerClasses: 'red-header',
-  classes: 'red-cell',
+  classes: 'red-cell edit',
   editable: true
 }, {
   dataField: 'rpos',
   text: 'Role',
   headerClasses: 'red-header center loader-pos',
-  classes: 'red-cell center img-wrapper',
+  classes: 'red-cell center img-wrapper edit',
   editor: {
     type: Type.SELECT,
     getOptions: (_setOptions : any, _vals: redData) => {
@@ -189,6 +234,7 @@ const redColumns = [{
       }];
     }
   },
+  formatter: roleRedFormatter,
   editCellClasses: 'red-cell'
 }, {
   dataField: 'rpick',
@@ -206,7 +252,8 @@ const redColumns = [{
   dataField: 'ritems',
   text: 'Items',
   headerClasses: 'red-header',
-  classes: 'red-cell'
+  classes: 'red-cell',
+  editable: false
 }, {
   dataField: 'rcs',
   text: 'CS',
@@ -231,6 +278,8 @@ const redColumns = [{
 function Table({side} : TableProps) {
   const dispatch: Dispatch<any> = useDispatch();
   let raw = useSelector((state: RootState) => state.main);
+  redColumns[0]["text"] = raw.redTeam.teamName;
+  blueColumns[0]["text"] = raw.blueTeam.teamName;
   const blueData: blueData[] = useSelector((state: RootState) => state.main.blue)
     .map((Player: PlayerData) => {
     return {
@@ -244,7 +293,8 @@ function Table({side} : TableProps) {
         Player.stats.item6].filter((val) => (val !== "")).join(', '),
       bcs: (Player.stats.totalMinionsKilled + 
         Player.stats.neutralMinionsKilled).toString(), 
-      bgold: Player.stats.goldEarned.toString()
+      bgold: Player.stats.goldEarned.toString(),
+      bban: Player.banChampionId
     }
   });
   const redData: redData[] = useSelector((state: RootState) => state.main.red)
@@ -260,7 +310,8 @@ function Table({side} : TableProps) {
       Player.stats.item6].filter((val) => (val !== "")).join(', '),
       rcs: (Player.stats.totalMinionsKilled + 
         Player.stats.neutralMinionsKilled).toString(), 
-      rgold: Player.stats.goldEarned.toString()
+      rgold: Player.stats.goldEarned.toString(),
+      rban: Player.banChampionId
     }
   });
   return (

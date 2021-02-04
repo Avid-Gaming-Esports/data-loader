@@ -116,8 +116,8 @@ const pHTimeline: Timeline = {
   damageTakenDiffPerMinDeltas: {},
   damageTakenPerMinDeltas: {},
   goldPerMinDeltas: {},
-  lane: "NONE",
-  role: "NONE",
+  lane: "TOP",
+  role: "TOP",
   xpDiffPerMinDeltas: {},
   xpPerMinDeltas: {}
 }
@@ -140,6 +140,7 @@ const initialState: gameState = {
   blue: [{
     account: phAccount,
     championId: "Aatrox",
+    banChampionId: "Aatrox",
     participantId: 1,
     spell1Id: "Flash",
     spell2Id: "Ignite",
@@ -149,6 +150,7 @@ const initialState: gameState = {
   },{
     account: phAccount,
     championId: "Aatrox",
+    banChampionId: "Aatrox",
     participantId: 2,
     spell1Id: "Flash",
     spell2Id: "Ignite",
@@ -158,6 +160,7 @@ const initialState: gameState = {
   },{
     account: phAccount,
     championId: "Aatrox",
+    banChampionId: "Aatrox",
     participantId: 3,
     spell1Id: "Flash",
     spell2Id: "Ignite",
@@ -167,6 +170,7 @@ const initialState: gameState = {
   },{
     account: phAccount,
     championId: "Aatrox",
+    banChampionId: "Aatrox",
     participantId: 4,
     spell1Id: "Flash",
     spell2Id: "Ignite",
@@ -176,6 +180,7 @@ const initialState: gameState = {
   },{
     account: phAccount,
     championId: "Aatrox",
+    banChampionId: "Aatrox",
     participantId: 5,
     spell1Id: "Flash",
     spell2Id: "Ignite",
@@ -186,6 +191,7 @@ const initialState: gameState = {
   red: [{
     account: phAccount,
     championId: "Aatrox",
+    banChampionId: "Aatrox",
     participantId: 6,
     spell1Id: "Flash",
     spell2Id: "Ignite",
@@ -195,6 +201,7 @@ const initialState: gameState = {
   },{
     account: phAccount,
     championId: "Aatrox",
+    banChampionId: "Aatrox",
     participantId: 7,
     spell1Id: "Flash",
     spell2Id: "Ignite",
@@ -204,6 +211,7 @@ const initialState: gameState = {
   },{
     account: phAccount,
     championId: "Aatrox",
+    banChampionId: "Aatrox",
     participantId: 8,
     spell1Id: "Flash",
     spell2Id: "Ignite",
@@ -213,6 +221,7 @@ const initialState: gameState = {
   },{
     account: phAccount,
     championId: "Aatrox",
+    banChampionId: "Aatrox",
     participantId: 9,
     spell1Id: "Flash",
     spell2Id: "Ignite",
@@ -222,6 +231,7 @@ const initialState: gameState = {
   },{
     account: phAccount,
     championId: "Aatrox",
+    banChampionId: "Aatrox",
     participantId: 10,
     spell1Id: "Flash",
     spell2Id: "Ignite",
@@ -241,6 +251,38 @@ const initialState: gameState = {
     queueId: 0,
     seasonId: 0
   },
+  redTeam: {
+    baronKills: 1,
+    dragonKills: 2,
+    firstBaron: true,
+    firstBlood: true,
+    firstDragon: false,
+    firstInhibitor: true,
+    firstRiftHerald: true,
+    firstTower: true,
+    inhibitorKills: 2,
+    riftHeraldKills: 2,
+    teamId: "red",
+    teamName: "RED",
+    towerKills: 10,
+    win: true
+  },
+  blueTeam: {
+    baronKills: 1,
+    dragonKills: 2,
+    firstBaron: true,
+    firstBlood: true,
+    firstDragon: false,
+    firstInhibitor: true,
+    firstRiftHerald: true,
+    firstTower: true,
+    inhibitorKills: 2,
+    riftHeraldKills: 2,
+    teamId: "blue",
+    teamName: "BLU",
+    towerKills: 10,
+    win: true
+  },
   raw: JSON.stringify(""),
   onView: false
 }
@@ -251,20 +293,44 @@ const reducer = (
 ): gameState => {
   switch (action.type) {
     case actionTypes.UPDATE_INFO:
-      if (action.payload.blue && action.payload.red && action.payload.meta) {
+      if (action.payload.blue && action.payload.red && action.payload.meta &&
+        action.payload.blueTeam && action.payload.redTeam) {
         return {
           ...state,
           blue: action.payload.blue, 
           red: action.payload.red,
+          blueTeam: action.payload.blueTeam,
+          redTeam: action.payload.redTeam,
           meta: action.payload.meta,
           raw: JSON.stringify(action.payload.raw),
         }
-      } else {
+      }
+      break;
+    case actionTypes.UPDATE_TEAM_NAME:
+      if (action.payload.blueTeam && action.payload.redTeam) {
         return {
           ...state,
-          raw: JSON.stringify(action.payload.raw),
+          blueTeam: action.payload.blueTeam,
+          redTeam: action.payload.redTeam
         }
       }
+      break;
+    case actionTypes.UPDATE_RED_PLAYERS:
+      if (action.payload.red) {
+        return {
+          ...state,
+          red: action.payload.red
+        }
+      }
+      break;
+    case actionTypes.UPDATE_BLUE_PLAYERS:
+      if (action.payload.blue) {
+        return {
+          ...state,
+          blue: action.payload.blue
+        }
+      }
+      break;
     case actionTypes.UPDATE_STATE:
       return {
         ...state,

@@ -1,4 +1,5 @@
 .center {
+  vertical-align: middle !important;
   text-align: center;
 }
 
@@ -7,7 +8,9 @@
 }
 
 .blue-cell {
+  vertical-align: middle !important;
   background-color: #ecf2ff;
+  cursor: default;
 }
 
 .red-header {
@@ -15,7 +18,9 @@
 }
 
 .red-cell {
+  vertical-align: middle !important;
   background-color: #ffe8e7;
+  cursor: default;
 }
 
 .img-wrapper{
@@ -44,4 +49,12 @@
 
 .loader-ban {
   width: 100px;
+}
+
+.center img {
+  height: 2.6rem;
+}
+
+.edit {
+  cursor: pointer !important;
 }

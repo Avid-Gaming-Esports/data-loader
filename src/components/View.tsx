@@ -48,6 +48,8 @@ function View() {
                 onClick={(_e) => { dispatch(updateScreen({
                   blue: didLoad.blue,
                   red: didLoad.red,
+                  blueTeam: didLoad.blueTeam,
+                  redTeam: didLoad.redTeam,
                   raw: didLoad.raw,
                   meta: didLoad.meta,
                   onView: true

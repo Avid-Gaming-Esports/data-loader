@@ -1,16 +1,36 @@
 import React, { useState } from 'react';
 import { Accordion, Card, Form } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from 'redux';
+import { updateTeamNames } from '../store/actionCreators';
 
 import { RootState } from "../store/rootReducer";
 
 import '../style/Metadata.css';
 import { Constants } from './Constants';
 
+function updateTeamName(rTeam: TeamData, bTeam: TeamData, 
+  base: gameState, dispatch: Dispatch) {
+    const toUpdate : gameState = {
+      blue: base.blue,
+      red: base.red,
+      blueTeam: bTeam,
+      redTeam: rTeam,
+      meta: base.meta,
+      raw: base.raw,
+      onView: false
+    }
+    dispatch(updateTeamNames(toUpdate));
+}
+
 function Metadata() {
   const md : Metadata = useSelector((state: RootState) => state.main.meta);
+  const base : gameState = useSelector((state: RootState) => state.main);
+  const rTeam : TeamData = useSelector((state: RootState) => state.main.redTeam);
+  const bTeam : TeamData = useSelector((state: RootState) => state.main.blueTeam);
   const [metaExpander, setMetaExpander] = useState("+");
   const keys = Object.keys(md);
+  const dispatch: Dispatch<any> = useDispatch();
   return (
   <Accordion className="metadata">
     <Card>
@@ -60,6 +80,30 @@ function Metadata() {
             /></div> }
             </div>)
           })}
+          <div>
+            <Form.Label>redTeamName</Form.Label>
+            <Form.Control
+              as="textarea"
+              value={rTeam.teamName}
+              id={"teamNameRed"}
+              onChange={(e) => {
+                rTeam.teamName = e.target.value;
+                updateTeamName(rTeam, bTeam, base, dispatch);
+              }}
+            />
+          </div>
+          <div>
+            <Form.Label>blueTeamName</Form.Label>
+            <Form.Control
+              as="textarea"
+              value={bTeam.teamName}
+              id={"teamNameRed"}
+              onChange={(e) => {
+                bTeam.teamName = e.target.value;
+                updateTeamName(rTeam, bTeam, base, dispatch);
+              }}
+            />
+          </div>
           </Form.Group>
         </div>
         </Accordion.Collapse>

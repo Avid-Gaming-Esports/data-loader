@@ -1,5 +1,26 @@
 import * as actionTypes from "./actionTypes"
 
+export function updateTeamNames(raw: gameState) {
+  return {
+    type: actionTypes.UPDATE_TEAM_NAME,
+    payload: raw
+  }
+}
+
+export function updateRedPlayers(raw: gameState) {
+  return {
+    type: actionTypes.UPDATE_RED_PLAYERS,
+    payload: raw
+  }
+}
+
+export function updateBluePlayers(raw: gameState) {
+  return {
+    type: actionTypes.UPDATE_BLUE_PLAYERS,
+    payload: raw
+  }
+}
+
 export function putGameID(raw: gameState) {
   return {
     type: actionTypes.UPDATE_INFO,

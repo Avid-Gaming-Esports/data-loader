@@ -30,6 +30,10 @@ export abstract class Constants {
     100: "blue",
     200: "red"
   }
+  static readonly TEAM_NAME: {[key: number] : string} = {
+    100: "BLU",
+    200: "RED"
+  }
   static readonly COL_ROLE_MAP: {[key: string] : string} = {
     "TOP": "SOLO",
     "JUNGLE": "NONE",

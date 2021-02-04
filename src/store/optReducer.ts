@@ -11,7 +11,7 @@ const initialState: optState = {
   gameOpt: [{"gameCreation": false}, {"gameDuration": false}, {"gameId": false}, {"gameMode": false},
   {"gameType": false}, {"gameVersion": false}, {"mapId": false}, {"platformId": false}, 
   {"queueId": false},{"seasonId": false}],
-  generalOpt: [{"participantId": true}, {"teamId": true}, {"championId": true}, 
+  generalOpt: [{"participantId": true}, {"teamId": true}, {"championId": true}, {"banChampionId": true},
   {"spell1Id": true}, {"spell2Id": true}],
   accountOpt: [{"platformId": false}, {"accountId": false}, {"summonerName": true}, {"summonerId": false}, 
   {"currentAccountId": false}, {"currentPlatformId": false}, {"matchHistoryUri": false}, {"profileIcon": false}],

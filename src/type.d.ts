@@ -22,6 +22,8 @@ type gameState = {
   blue: PlayerData[], 
   red: PlayerData[],
   meta: Metadata,
+  redTeam: TeamData,
+  blueTeam: TeamData,
   raw: string,
   onView?: boolean,
 }
@@ -51,6 +53,8 @@ type gameData = {
   red?: PlayerData[],
   blue?: PlayerData[],
   meta?: Metadata,
+  redTeam?: TeamData,
+  blueTeam?: TeamData,
   raw?: object,
   onView?: boolean,
 }
@@ -72,8 +76,26 @@ type Metadata = {
   seasonId: number
 }
 
+type TeamData = {
+  towerKills: number,
+  riftHeraldKills:	number,
+  firstBlood:	boolean,
+  inhibitorKills:	number,
+  firstBaron:	boolean,
+  firstDragon: boolean,
+  dragonKills: number,
+  baronKills: number,
+  firstInhibitor: boolean,
+  firstTower: boolean,
+  firstRiftHerald: boolean,
+  teamId: string,
+  teamName: string,
+  win: boolean
+}
+
 type PlayerData = {
   championId: string,
+  banChampionId: string,
   participantId: number,
   spell1Id: string,
   spell2Id: string,

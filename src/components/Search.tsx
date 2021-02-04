@@ -141,7 +141,7 @@ function Search() {
       })
       
       let md : Metadata = { 
-        gameCreation: moment(res.data.gameCreation).format('MMMM Do YYYY, H:mm:ss'),
+        gameCreation: moment(res.data.gameCreation).format(),
         gameDuration: moment.duration(res.data.gameDuration, "seconds").format("h:mm:ss"),
         gameId: res.data.gameId,
         gameMode: res.data.gameMode,
@@ -152,13 +152,50 @@ function Search() {
         queueId: queueTransform[res.data.queueId],
         seasonId: res.data.seasonId,
       }
+      
+      let redTeam = res.data.teams.filter((teamObj: any) => teamObj.teamId === 200)[0];
+      let blueTeam = res.data.teams.filter((teamObj: any) => teamObj.teamId === 100)[0];
+
+      redTeam.bans.forEach((ban: any, idx: number) => {
+        pullRed[idx].banChampionId = champTransform[ban.championId]
+      })
+      blueTeam.bans.forEach((ban: any, idx: number) => {
+        pullBlue[idx].banChampionId = champTransform[ban.championId]
+      })
+
+      let strippedTeams = res.data.teams.map((entry: any) => {
+        let entryTeam : TeamData = {
+          towerKills: entry.towerKills,
+          riftHeraldKills:	entry.riftHeraldKills,
+          firstBlood:	entry.firstBlood,
+          inhibitorKills:	entry.inhibitorKills,
+          firstBaron:	entry.firstBaron,
+          firstDragon: entry.firstDragon,
+          dragonKills: entry.dragonKills,
+          baronKills: entry.baronKills,
+          firstInhibitor: entry.firstInhibitor,
+          firstTower: entry.firstTower,
+          firstRiftHerald: entry.firstRiftHerald,
+          teamId: Constants.TEAM_MAP[entry.teamId],
+          teamName: Constants.TEAM_NAME[entry.teamId],
+          win: (entry.win === "Win")
+        }
+        return entryTeam
+      })
+
+      let redTeamData = strippedTeams.filter((teamObj: TeamData) => teamObj.teamId === "red")[0];
+      let blueTeamData = strippedTeams.filter((teamObj: TeamData) => teamObj.teamId === "blue")[0];
+
       const toUpdate : gameState = {
         blue: pullBlue,
         red: pullRed,
         meta: md,
+        redTeam: redTeamData,
+        blueTeam: blueTeamData,
         raw: JSON.stringify(res.data),
         onView: false
       }
+
       dispatch(putGameID(toUpdate));
     });
   };
