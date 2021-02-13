@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Dispatch } from "redux";
 import { useDispatch } from "react-redux";
-import { InputGroup, FormControl } from 'react-bootstrap';
-import { FiSearch } from "react-icons/fi";
+import { InputGroup, FormControl, Modal, Image } from 'react-bootstrap';
+import { FiAlertCircle, FiSearch } from "react-icons/fi";
 import axios from 'axios';
 
 import { putGameID } from '../store/actionCreators';
@@ -10,6 +10,9 @@ import { putGameID } from '../store/actionCreators';
 import { Constants } from './Constants';
 
 import '../style/View.css';
+
+import info1 from'../img/raw1.png';
+import info2 from'../img/raw2.png';
 // import Metadata from './Metadata';
 
 var champMap = require('../champion.json');
@@ -26,6 +29,10 @@ momentDurationFormatSetup(moment);
 function Search() {
   const dispatch: Dispatch<any> = useDispatch();
   const [matchID, setMatchID] = useState(0);
+  const [showHelp, setShowHelp] = useState(false);
+
+  const handleClose = () => setShowHelp(false);
+  const handleShow = () => setShowHelp(true);
 
   let champTransform : {[key: number] : any} = { };
   for (let idNugget in champMap.data) {
@@ -53,7 +60,7 @@ function Search() {
   }
 
   let callApi = async () => {
-    axios.post("http://localhost:5000/api", {
+    axios.post("https://avid-alpha.wl.r.appspot.com/api", {
       gameID: matchID
     }).then((res) => {
       res.data.participants = res.data.participants.map((key : any) => {
@@ -201,6 +208,7 @@ function Search() {
   };
 
   return (
+    <div>
       <InputGroup className="mb-3 sb-1">
         <InputGroup.Prepend
           onClick={() => callApi()}>
@@ -212,9 +220,33 @@ function Search() {
           aria-label="game-id"
           aria-describedby="basic-addon1"
           type="number"
-          onChange={(event) => setMatchID(parseInt(event.target.value))}
+          onKeyPress={(event: React.KeyboardEvent) => {
+            if(event.key === "Enter") {
+              callApi()
+            }
+          }}
+          onChange={(event) => {
+            setMatchID(parseInt(event.target.value));
+          }}
         />
+        <InputGroup.Append
+          onClick={handleShow}>
+          <InputGroup.Text className="lb-1 rounded-right"><FiAlertCircle size={"1.2rem"}/></InputGroup.Text>
+        </InputGroup.Append>
       </InputGroup>
+      <Modal show={showHelp} onHide={handleClose}>
+        <Modal.Header closeButton>
+          GameID
+        </Modal.Header>
+        <Modal.Body>
+          <Image src={info1} alt={"info1"}/>
+          <Image src={info2} alt={"info1"}/>
+        </Modal.Body>
+        <Modal.Header>
+          Editing
+        </Modal.Header>
+      </Modal>
+    </div>
   );
 }
 

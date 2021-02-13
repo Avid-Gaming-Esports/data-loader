@@ -37,6 +37,18 @@ function View() {
             <CSVComponent headless={false} />, opt.outputTypes)}
           {renderOutputTypes("CSV-Headless", 
             <CSVComponent headless={true} />, opt.outputTypes)}
+          <Button variant="secondary" 
+                  onClick={(_e) => { dispatch(updateScreen({
+                    blue: didLoad.blue,
+                    red: didLoad.red,
+                    blueTeam: didLoad.blueTeam,
+                    redTeam: didLoad.redTeam,
+                    raw: didLoad.raw,
+                    meta: didLoad.meta,
+                    onView: false
+                  }))}}>
+                  Go Back
+          </Button>
         </div>) : 
         (<div className="main-view">
         <Search />

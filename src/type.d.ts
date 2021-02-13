@@ -32,6 +32,7 @@ type optState = {
   preset?: string[],
   outputTypes?: {[key: string] : boolean},
   gameOpt?: {[key: string] : boolean}[],
+  teamOpt?: {[key: string] : boolean}[],
   generalOpt?: {[key: string] : boolean}[],
   accountOpt?: {[key: string] : boolean}[],
   statOpt?: {[key: string] : boolean}[],

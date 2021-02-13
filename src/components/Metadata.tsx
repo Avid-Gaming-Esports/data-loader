@@ -53,6 +53,7 @@ function Metadata() {
         </Card>
         <Accordion.Collapse eventKey="0" >
         <div>
+        <br />
         <Form.Group className="md-group">
           {Object.values(md).map((sub_key, sub_val) => {
             // console.log(sub_key.toString())

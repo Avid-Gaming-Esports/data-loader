@@ -20,8 +20,18 @@ import { RootState } from "../store/rootReducer";
 
 import '../style/Table.css';
 
+var itemMap = require('../item.json').data;
+
+const champImageDir = importAll(require.context('../img/champion/', false));
+const itemImageDir = importAll(require.context('../img/item/', false));
+
 type TableProps = {
   side: string
+}
+
+let itemTransform : {[key: string] : number} = { };
+for (let itemNugget in itemMap) {
+  itemTransform[itemMap[itemNugget]["name"]] = parseInt(itemNugget)
 }
 
 const imageMapper : {[key: string] : any} = {
@@ -32,33 +42,75 @@ const imageMapper : {[key: string] : any} = {
   "SUPPORT": supp
 }
 
+function importAll(r: any) {
+  let images : any = {};
+  r.keys().forEach((item: any, _index: any) => { images[item.replace('./', '')] = r(item); });
+  return images;
+}
+
 function roleBlueFormatter(_cell: any, row: any) {
   let image = imageMapper[row["bpos"]]
   return (
-    <Image src={image} />
+    (Object.keys(imageMapper).includes(row["bpos"])) ? 
+    <Image src={image} alt={row["bpos"]}/> : <span>NONE</span>
   );
 }
 
 function roleRedFormatter(_cell: any, row: any) {
   let image = imageMapper[row["rpos"]]
   return (
-    <Image src={image} />
+    (Object.keys(imageMapper).includes(row["rpos"])) ? 
+    <Image src={image} alt={row["rpos"]}/> : <span>NONE</span>
   );
 }
 
-// function pickBlueFormatter(_cell: any, row: any) {
-//   let image = require('../img/champion/' + row["bpick"] + "_0.jpg")
-//   console.log(image);
-//   return (
-//     <Image src={image} />
-//   );
-// }
-// function pickRedFormatter(_cell: any, row: any) {
-//   let image = imageMapper[row["rpos"]]
-//   return (
-//     <Image src={image} />
-//   );
-// }
+function champBanFormatter(_cell: any, row: any) {
+  let selector = (row["rban"] === undefined) ? row["bban"] : row["rban"]
+  const path = selector + "_0.jpg";
+  return (
+    (Object.keys(champImageDir).includes(path)) ? 
+      <img src={champImageDir[path].default} alt={path}/> : 
+      <div className="placeholder"> &#8856; </div>
+  );
+}
+
+function champPickFormatter(_cell: any, row: any) {
+  let selector = (row["rpick"] === undefined) ? row["bpick"] : row["rpick"]
+  const path = selector + "_0.jpg";
+  return (
+    (Object.keys(champImageDir).includes(path)) ? 
+      <img src={champImageDir[path].default} alt={path}/> : 
+      <div className="placeholder"> &#8856; </div>
+  );
+}
+
+function itemFormatter(_cell: any, row: any) {
+  let selector = (row["ritems"] === undefined) ? row["bitems"] : row["ritems"];
+  let convertedData = selector.split(",");
+  convertedData = convertedData.map((val: string) => {
+    if(val === "") {
+      return -1
+    }
+    if (Object.keys(itemTransform).includes(val)) {
+      return itemTransform[val]
+    } else {
+      return -2
+    }
+  })
+  return (
+  <div className="item-holder">
+    {convertedData.map((val: number, idx: any) => {
+      if (val === -1) {
+        return (<div className="placeholder" key={idx}> &#8856; </div>)
+      }
+      if (val === -2) {
+        return (<div className="placeholder" key={idx}> &#63; </div>)
+      }
+      const path = val + ".png";
+      return <img src={itemImageDir[path].default} alt={path} key={idx}/>
+    })}
+  </div>)
+}
 
 const formatWithIcon = () => {
   return(
@@ -127,7 +179,7 @@ function formatKDA(Player: PlayerData) {
   let kills = Player.stats.kills.toString();
   let deaths = Player.stats.deaths.toString();
   let assists = Player.stats.assists.toString();
-  return kills + "/" + deaths + "/" + assists;
+  return kills + " / " + deaths + " / " + assists;
 }
 
 let blueColumns = [{
@@ -143,22 +195,7 @@ let blueColumns = [{
   editor: {
     type: Type.SELECT,
     getOptions: (_setOptions : any, _vals: blueData) => {
-      return [{
-        value: 'TOP',
-        label: 'TOP'
-      }, {
-        value: 'JUNGLE',
-        label: 'JUNGLE'
-      }, {
-        value: 'MIDDLE',
-        label: 'MIDDLE'
-      }, {
-        value: 'BOTTOM',
-        label: 'BOTTOM'
-      }, {
-        value: 'SUPPORT',
-        label: 'SUPPORT'
-      }];
+      return Constants.ROLE_OPTIONS;
     }
   },
   formatter: roleBlueFormatter,
@@ -167,7 +204,8 @@ let blueColumns = [{
   dataField: 'bpick',
   text: 'Pick',
   headerClasses: 'blue-header center loader-pick',
-  classes: 'blue-cell center',
+  classes: 'blue-cell center champ',
+  formatter: champPickFormatter,
   editable: false
 }, {
   dataField: 'bkda',
@@ -179,7 +217,8 @@ let blueColumns = [{
   dataField: 'bitems',
   text: 'Items',
   headerClasses: 'blue-header',
-  classes: 'blue-cell',
+  classes: 'blue-cell center item',
+  formatter: itemFormatter,
   editable: false
 }, {
   dataField: 'bcs',
@@ -198,7 +237,8 @@ let blueColumns = [{
   dataField: 'bban',
   text: 'Ban',
   headerClasses: 'blue-header center loader-ban',
-  classes: 'blue-cell center',
+  classes: 'blue-cell center champ',
+  formatter: champBanFormatter,
   editable: false
 }];
 
@@ -216,22 +256,7 @@ let redColumns = [{
   editor: {
     type: Type.SELECT,
     getOptions: (_setOptions : any, _vals: redData) => {
-      return [{
-        value: 'TOP',
-        label: 'TOP'
-      }, {
-        value: 'JUNGLE',
-        label: 'JUNGLE'
-      }, {
-        value: 'MIDDLE',
-        label: 'MIDDLE'
-      }, {
-        value: 'BOTTOM',
-        label: 'BOTTOM'
-      }, {
-        value: 'SUPPORT',
-        label: 'SUPPORT'
-      }];
+      return Constants.ROLE_OPTIONS;
     }
   },
   formatter: roleRedFormatter,
@@ -240,7 +265,8 @@ let redColumns = [{
   dataField: 'rpick',
   text: 'Pick',
   headerClasses: 'red-header center loader-pick',
-  classes: 'red-cell center',
+  classes: 'red-cell center champ',
+  formatter: champPickFormatter,
   editable: false
 }, {
   dataField: 'rkda',
@@ -252,7 +278,8 @@ let redColumns = [{
   dataField: 'ritems',
   text: 'Items',
   headerClasses: 'red-header',
-  classes: 'red-cell',
+  classes: 'red-cell center item',
+  formatter: itemFormatter,
   editable: false
 }, {
   dataField: 'rcs',
@@ -272,7 +299,8 @@ let redColumns = [{
   text: 'Ban',
   headerClasses: 'red-header center loader-ban',
   editable: false,
-  classes: 'red-cell center'
+  formatter: champBanFormatter,
+  classes: 'red-cell center champ'
 }];
 
 function Table({side} : TableProps) {
@@ -290,10 +318,10 @@ function Table({side} : TableProps) {
       bkda: formatKDA(Player),
       bitems: [Player.stats.item0, Player.stats.item1, Player.stats.item2, 
         Player.stats.item3, Player.stats.item4, Player.stats.item5, 
-        Player.stats.item6].filter((val) => (val !== "")).join(', '),
+        Player.stats.item6].join(','),
       bcs: (Player.stats.totalMinionsKilled + 
         Player.stats.neutralMinionsKilled).toString(), 
-      bgold: Player.stats.goldEarned.toString(),
+      bgold: Player.stats.goldEarned.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'),
       bban: Player.banChampionId
     }
   });
@@ -307,10 +335,10 @@ function Table({side} : TableProps) {
       rkda: formatKDA(Player),
       ritems: [Player.stats.item0, Player.stats.item1, Player.stats.item2, 
       Player.stats.item3, Player.stats.item4, Player.stats.item5, 
-      Player.stats.item6].filter((val) => (val !== "")).join(', '),
+      Player.stats.item6].join(','),
       rcs: (Player.stats.totalMinionsKilled + 
         Player.stats.neutralMinionsKilled).toString(), 
-      rgold: Player.stats.goldEarned.toString(),
+      rgold: Player.stats.goldEarned.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'),
       rban: Player.banChampionId
     }
   });

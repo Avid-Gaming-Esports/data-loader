@@ -16,29 +16,45 @@ function swap(arr: any[], idx1: number, idx2: number) {
   arr[idx2] = tmp;
 }
 
-function formatLine(value: PlayerData, meta: Metadata, store: optState) {
+function createKeys(object: {[key: string]: boolean;}[] | undefined) {
+  let res : {[key: string] : number} = { };
+  if (object) {
+    for(let i = 0; i < Object.keys(object).length; i++) {
+      res[Object.keys(object[i])[0]] = i;
+    }
+  }
+  return res;
+}
+
+function simpleConvertStr(valueObj: Metadata | TeamData, 
+  handlerObj: {[key: string]: boolean; }[] | undefined, data: boolean) {
+  if(data) {
+    return Object.values(valueObj).map((key, val) => {
+      if (handlerObj && 
+        handlerObj[val][Object.keys(handlerObj[val])[0]]) {
+        return key.toString() + ",";
+      }
+      return "";
+    });
+  }
+  return Object.keys(valueObj).map((key, val) => {
+    if (handlerObj && 
+      handlerObj[val][Object.keys(handlerObj[val])[0]]) {
+      return key.toString() + ",";
+    }
+    return "";
+  });
+}
+
+function formatLine(value: PlayerData, meta: Metadata, store: optState, 
+  redTeam: TeamData, blueTeam: TeamData) {
   let accountObj : PlayerAccount["player"] = value.account.player;
   let statObj : Stats = value.stats;
   let timeObj : Timeline = value.timeline;
+  let teamObj : TeamData = (value.teamId === "red") ? redTeam : blueTeam;
 
-  let genKeys : {[key: string] : number} = { };
-  if(store.generalOpt) {
-    for(let i = 0; i < Object.keys(store.generalOpt).length; i++) {
-      genKeys[Object.keys(store.generalOpt[i])[0]] = i
-    }
-  }
-  // let statKeys : {[key: string] : number} = { };
-  // if(store.statOpt) {
-  //   for(let i = 0; i < Object.keys(store.statOpt).length; i++) {
-  //     statKeys[Object.keys(store.statOpt[i])[0]] = i
-  //   }
-  // }
-  let accKeys : {[key: string] : number} = { };
-  if(store.accountOpt) {
-    for(let i = 0; i < Object.keys(store.accountOpt).length; i++) {
-      accKeys[Object.keys(store.accountOpt[i])[0]] = i
-    }
-  }
+  let genKeys = createKeys(store.generalOpt);
+  let accKeys = createKeys(store.accountOpt);
   let timeKeys : { [key: string] : number; } = { };
   if(store.timelineOpt) {
     for(let i = 0; i < Object.keys(store.timelineOpt).length; i++) {
@@ -46,13 +62,8 @@ function formatLine(value: PlayerData, meta: Metadata, store: optState) {
       timeKeys[Object.keys(store.timelineOpt[i])[0]] = idx
     }
   }
-  let gameStr = Object.values(meta).map((key, val) => {
-    if (store.gameOpt && 
-      store.gameOpt[val][Object.keys(store.gameOpt[val])[0]]) {
-      return key.toString() + ",";
-    }
-    return "";
-  })
+  let gameStr = simpleConvertStr(meta, store.gameOpt, true);
+  let teamStr = simpleConvertStr(teamObj, store.teamOpt, true);
   let pre = Object.values(value).map((key, val) => {
     if(typeof(key) !== "object") {
       let idx = genKeys[Object.keys(value)[val]]
@@ -116,27 +127,17 @@ function formatLine(value: PlayerData, meta: Metadata, store: optState) {
     }
     return "";
   });
-  return (gameStr.join('') + pre.join('') + accountStr.join('') +
+  return (gameStr.join('') + teamStr.join('') + pre.join('') + accountStr.join('') +
     statStr.join('') + timeStr.join('')).slice(0, -1);
 }
 
-function formatHeader(value: PlayerData, meta: Metadata, store: optState) {
+function formatHeader(value: PlayerData, meta: Metadata, store: optState, teamObj: TeamData) {
   let accountObj : PlayerAccount["player"] = value.account.player;
   let statObj : Stats = value.stats;
   let timeObj : Timeline = value.timeline;
 
-  let genKeys : {[key: string] : number} = { };
-  if(store.generalOpt) {
-    for(let i = 0; i < Object.keys(store.generalOpt).length; i++) {
-      genKeys[Object.keys(store.generalOpt[i])[0]] = i
-    }
-  }
-  let accKeys : {[key: string] : number} = { };
-  if(store.accountOpt) {
-    for(let i = 0; i < Object.keys(store.accountOpt).length; i++) {
-      accKeys[Object.keys(store.accountOpt[i])[0]] = i
-    }
-  }
+  let genKeys = createKeys(store.generalOpt);
+  let accKeys = createKeys(store.accountOpt);
   let timeKeys : { [key: string] : number; } = { };
   if(store.timelineOpt) {
     for(let i = 0; i < Object.keys(store.timelineOpt).length; i++) {
@@ -144,13 +145,8 @@ function formatHeader(value: PlayerData, meta: Metadata, store: optState) {
       timeKeys[Object.keys(store.timelineOpt[i])[0]] = idx
     }
   }
-  let gameStr = Object.keys(meta).map((key, val) => {
-    if (store.gameOpt && 
-      store.gameOpt[val][key]) {
-      return key.toString() + ",";
-    }
-    return "";
-  })
+  let gameStr = simpleConvertStr(meta, store.gameOpt, false);
+  let teamStr = simpleConvertStr(teamObj, store.teamOpt, false);
   let pre = Object.keys(value).map((key, val) => {
     if(typeof(key) !== "object" && Object.keys(genKeys).includes(key) 
       && store.generalOpt && store.generalOpt[genKeys[key]][key]) {
@@ -209,7 +205,7 @@ function formatHeader(value: PlayerData, meta: Metadata, store: optState) {
     }
     return "";
   });
-  return (gameStr.join('') + pre.join('') + accountStr.join('') + 
+  return (gameStr.join('') + teamStr.join('') + pre.join('') + accountStr.join('') + 
   statStr.join('') + timeStr.join('')).slice(0, -1);
 }
 
@@ -220,11 +216,13 @@ function CSVComponent(props: CSVProps) {
     <Alert show={true} variant="dark" className="csv-alert">
       <Alert.Heading>{props.headless ? "CSV (Headless)" : "CSV"}</Alert.Heading>
       <div className="csv-raw-format">
-        {props.headless ? "" : <span>{didLoad.red ? formatHeader(didLoad.red[0], didLoad.meta, opt) : "ERROR"} <br /></span>}
+        {props.headless ? "" : <span>{didLoad.red ? formatHeader(didLoad.red[0], didLoad.meta, opt, didLoad.redTeam) : "ERROR"} <br /></span>}
         {didLoad.red ? didLoad.red.map((value: PlayerData, idx: number) => 
-          <span key={idx}>{formatLine(value, didLoad.meta, opt)} <br /></span>) : <span></span>}
+          <span key={idx}>{formatLine(value, didLoad.meta, opt, didLoad.redTeam, didLoad.blueTeam)} 
+          <br /></span>) : <span></span>}
         {didLoad.blue ? didLoad.blue.map((value: PlayerData, idx: number) => 
-          <span key={idx}>{formatLine(value, didLoad.meta, opt)} <br /></span>) : <span></span>}
+          <span key={idx}>{formatLine(value, didLoad.meta, opt, didLoad.redTeam, didLoad.blueTeam)} 
+          <br /></span>) : <span></span>}
       </div>
     </Alert>
   );

@@ -8,9 +8,13 @@ const initialState: optState = {
     "CSV": true,
     "CSV-Headless": true
   },
-  gameOpt: [{"gameCreation": false}, {"gameDuration": false}, {"gameId": false}, {"gameMode": false},
+  gameOpt: [{"gameCreation": true}, {"gameDuration": true}, {"gameId": true}, {"gameMode": false},
   {"gameType": false}, {"gameVersion": false}, {"mapId": false}, {"platformId": false}, 
   {"queueId": false},{"seasonId": false}],
+  teamOpt: [{"towerKills": false}, {"riftHeraldKills": false}, {"firstBlood": false}, {"inhibitorKills": false},
+  {"firstBaron": false}, {"firstDragon": false}, {"dragonKills": false}, {"baronKills": false},
+  {"firstInhibitor": false}, {"firstTower": false}, {"firstRiftHerald": false}, {"teamId": false},
+  {"teamName": true}, {"win": false}],
   generalOpt: [{"participantId": true}, {"teamId": true}, {"championId": true}, {"banChampionId": true},
   {"spell1Id": true}, {"spell2Id": true}],
   accountOpt: [{"platformId": false}, {"accountId": false}, {"summonerName": true}, {"summonerId": false}, 
@@ -50,31 +54,55 @@ const optReducer = (
 ): optState => {
   switch (action.type) {
     case actionTypes.UPDATE_PRESET:
+      let newGame = state.gameOpt
+      newGame = newGame?.map((key, _value) => {
+        if(action.payload.preset) {
+          key[Object.keys(key)[0]] = action.payload.preset.includes(Object.keys(key)[0])
+        }
+        return key
+      });
+      let newTeam = state.teamOpt
+      newTeam = newTeam?.map((key, _value) => {
+        if(action.payload.preset) {
+          key[Object.keys(key)[0]] = action.payload.preset.includes(Object.keys(key)[0])
+        }
+        return key
+      });
       let newGen = state.generalOpt
       newGen = newGen?.map((key, _value) => {
         if(action.payload.preset) {
           key[Object.keys(key)[0]] = action.payload.preset.includes(Object.keys(key)[0])
         }
         return key
-      })
+      });
+      let newAcc = state.accountOpt
+      newAcc = newAcc?.map((key, _value) => {
+        if(action.payload.preset) {
+          key[Object.keys(key)[0]] = action.payload.preset.includes(Object.keys(key)[0])
+        }
+        return key
+      });
       let newStat = state.statOpt
       newStat = newStat?.map((key, _value) => {
         if(action.payload.preset) {
           key[Object.keys(key)[0]] = action.payload.preset.includes(Object.keys(key)[0])
         }
         return key
-      })
+      });
       let newTl = state.timelineOpt
       newTl = newTl?.map((key, _value) => {
         if(action.payload.preset) {
           key[Object.keys(key)[0]] = action.payload.preset.includes(Object.keys(key)[0])
         }
         return key
-      })
+      });
       return {
         ...state,
         preset: action.payload.preset,
+        gameOpt: newGame,
+        teamOpt: newTeam,
         generalOpt: newGen,
+        accountOpt: newAcc,
         statOpt: newStat,
         timelineOpt: newTl
       }

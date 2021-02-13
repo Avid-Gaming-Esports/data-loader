@@ -5,22 +5,28 @@
 
 .blue-header {
   background-color: #a3cfec;
+  padding: 0.3rem !important;
 }
 
 .blue-cell {
   vertical-align: middle !important;
   background-color: #ecf2ff;
   cursor: default;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 1rem;
 }
 
 .red-header {
   background-color: #e2b6b3;
+  padding: 0.3rem !important;
 }
 
 .red-cell {
   vertical-align: middle !important;
   background-color: #ffe8e7;
   cursor: default;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 1rem;
 }
 
 .img-wrapper{
@@ -57,4 +63,43 @@
 
 .edit {
   cursor: pointer !important;
+}
+
+.champ img {
+  border: 1px solid #dee2e6;
+}
+
+.champ .placeholder {
+  height: 2.6rem;
+  width: 2.6rem;
+  border: 1px solid #dee2e6;
+  color: #dee2e6;
+  margin: auto;
+  background-color: white;
+  font-size: 2rem;
+  line-height: 2.4rem;
+}
+
+.item img {
+  border: 1px solid #dee2e6;
+  height: 2rem;
+  width: 2rem;
+}
+
+.item .placeholder {
+  height: 2rem;
+  width: 2rem;
+  border: 1px solid #dee2e6;
+  color: #dee2e6;
+  background-color: white;
+  font-size: 1.2rem;
+  line-height: 1.8rem;
+  margin: 0;
+}
+
+.item-holder {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }

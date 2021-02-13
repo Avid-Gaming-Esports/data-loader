@@ -65,8 +65,6 @@ function Selector() {
   const [outputExpander, setOutputExpander] = useState("+");
   const [gameExpander, setGameExpander] = useState("+");
   const [generalExpander, setGeneralExpander] = useState("+");
-  const [statExpander, setStatExpander] = useState("+");
-  const [timeExpander, setTimeExpander] = useState("+");
   return (
   <Accordion className="metadata">
     <Card>
@@ -118,8 +116,13 @@ function Selector() {
             name="formHorizontalRadios"
             id="formHorizontalRadios3"
             className="radio-option"
-            onChange={(_e) => { 
-              handleChangePreset(dispatch, "all");
+            onChange={(_e) => {
+              toggleSubset(false, store, dispatch, store.gameOpt);
+              toggleSubset(false, store, dispatch, store.teamOpt);
+              toggleSubset(false, store, dispatch, store.generalOpt);
+              toggleSubset(false, store, dispatch, store.accountOpt);
+              toggleSubset(false, store, dispatch, store.statOpt);
+              toggleSubset(false, store, dispatch, store.timelineOpt);
             }}
           />
           <Form.Check
@@ -129,7 +132,12 @@ function Selector() {
             id="formHorizontalRadios4"
             className="radio-option"
             onChange={(_e) => { 
-              handleChangePreset(dispatch, "none");
+              toggleSubset(true, store, dispatch, store.gameOpt);
+              toggleSubset(true, store, dispatch, store.teamOpt);
+              toggleSubset(true, store, dispatch, store.generalOpt);
+              toggleSubset(true, store, dispatch, store.accountOpt);
+              toggleSubset(true, store, dispatch, store.statOpt);
+              toggleSubset(true, store, dispatch, store.timelineOpt);
             }}
           />
       </Form.Group>
@@ -193,6 +201,8 @@ function Selector() {
       </Card>
       <Accordion.Collapse eventKey="2">
       <div>
+      <br />
+      <b>Metadata</b>
       <Form.Group className="radios">
         {store.gameOpt?.map((key, val) => {
           return (
@@ -215,6 +225,29 @@ function Selector() {
             />)
           })}
       </Form.Group>
+      <b>Teams</b>
+      <Form.Group className="radios">
+        {store.teamOpt?.map((key, val) => {
+          return (
+            <Form.Check
+              type="checkbox"
+              label={Object.keys(key)[0]}
+              name="teamOption"
+              id={"teamOption" + val.toString()}
+              key={val}
+              className="radio-option"
+              checked={key[Object.keys(key)[0]]}
+              onChange={(_e) => {
+                let index;
+                if(store.teamOpt) {
+                  index = store.teamOpt[val];
+                  index[Object.keys(index)[0]] = !index[Object.keys(index)[0]]
+                }
+                handleChangeSelectors(dispatch, store);
+              }}
+            />)
+          })}
+      </Form.Group>
       </div>
       </Accordion.Collapse>
       </Accordion>
@@ -222,7 +255,7 @@ function Selector() {
     <Card>
       <Accordion as={Card.Header}>
       <Card className="group-by">
-        Player (General)
+        Player
         <Accordion.Toggle 
         as={Card} 
         eventKey="3" 
@@ -239,6 +272,19 @@ function Selector() {
       </Card>
       <Accordion.Collapse eventKey="3">
       <div>
+        <br />
+        <Form.Check
+          type="checkbox"
+          label="General"
+          name="generalMasterOption"
+          id="generalMaster"
+          className="sub-heading"
+          checked={isSubsetChecked(store.generalOpt)}
+          onChange={(_e) => { (isSubsetChecked(store.generalOpt)) ?
+            toggleSubset(true, store, dispatch, store.generalOpt) :
+            toggleSubset(false, store, dispatch, store.generalOpt);
+          }}
+        />
       <Form.Group className="radios">
         {store.generalOpt?.map((key, val) => {
           return (
@@ -261,30 +307,18 @@ function Selector() {
             />)
           })}
       </Form.Group>
-      </div>
-      </Accordion.Collapse>
-      </Accordion>
-    </Card>
-    <Card>
-      <Accordion as={Card.Header}>
-      <Card className="group-by">
-        Player (Account)
-        <Accordion.Toggle 
-        as={Card} 
-        eventKey="3" 
-        className="group-by-expander"
-        onClick={(_e) => {
-            if (generalExpander === "+"){
-              setGeneralExpander("-");
-            } else {
-              setGeneralExpander("+");
-            }
-          }}>
-            {generalExpander}
-        </Accordion.Toggle>
-      </Card>
-      <Accordion.Collapse eventKey="3">
-      <div>
+          <Form.Check
+            type="checkbox"
+            label="Account"
+            name="accountMasterOption"
+            id="accountMaster"
+            className="sub-heading"
+            checked={isSubsetChecked(store.accountOpt)}
+            onChange={(_e) => { (isSubsetChecked(store.accountOpt)) ?
+              toggleSubset(true, store, dispatch, store.accountOpt) :
+              toggleSubset(false, store, dispatch, store.accountOpt);
+            }}
+          />
       <Form.Group className="radios">
         {store.accountOpt?.map((key, val) => {
           return (
@@ -307,36 +341,18 @@ function Selector() {
             />)
           })}
       </Form.Group>
-      </div>
-      </Accordion.Collapse>
-      </Accordion>
-    </Card>
-    <Card>
-      <Accordion as={Card.Header}>
-        <Card className="group-by">
           <Form.Check
             type="checkbox"
-            label="Player (Stats)"
+            label="Stats"
             name="statMasterOption"
             id="statsMaster"
+            className="sub-heading"
             checked={isSubsetChecked(store.statOpt)}
             onChange={(_e) => { (isSubsetChecked(store.statOpt)) ?
               toggleSubset(true, store, dispatch, store.statOpt) :
               toggleSubset(false, store, dispatch, store.statOpt);
             }}
           />
-          <Accordion.Toggle 
-          as={Card} 
-          eventKey="4" 
-          className="group-by-expander"
-          onClick={(_e) => { (statExpander === "+") ?
-            setStatExpander("-") : setStatExpander("+");
-          }}>
-              {statExpander}
-          </Accordion.Toggle>
-        </Card>
-        <Accordion.Collapse eventKey="4" >
-        <div>
         <Form.Group className="radios">
           {store.statOpt?.map((key, val) => {
             return (
@@ -359,36 +375,18 @@ function Selector() {
               />)
           })}
           </Form.Group>
-        </div>
-        </Accordion.Collapse>
-      </Accordion>
-    </Card>
-    <Card>
-      <Accordion as={Card.Header}>
-        <Card className="group-by">
           <Form.Check
             type="checkbox"
-            label="Player (Timeline)"
+            label="Timeline"
             name="timeMasterOption"
             id="timeMaster"
+            className="sub-heading"
             checked={isSubsetChecked(store.timelineOpt)}
             onChange={(_e) => { (isSubsetChecked(store.timelineOpt)) ?
               toggleSubset(true, store, dispatch, store.timelineOpt) :
               toggleSubset(false, store, dispatch, store.timelineOpt);
             }}
           />
-          <Accordion.Toggle 
-          as={Card} 
-          eventKey="5" 
-          className="group-by-expander"
-          onClick={(_e) => { (timeExpander === "+") ?  
-          setTimeExpander("-") : setTimeExpander("+");
-          }}>
-              {timeExpander}
-          </Accordion.Toggle>
-        </Card>
-        <Accordion.Collapse eventKey="5" >
-        <div>
         <Form.Group className="radios">
           {store.timelineOpt?.map((key, val) => {
             return (
@@ -411,8 +409,8 @@ function Selector() {
               />)
           })}
           </Form.Group>
-        </div>
-        </Accordion.Collapse>
+      </div>
+      </Accordion.Collapse>
       </Accordion>
     </Card>
   </Accordion>

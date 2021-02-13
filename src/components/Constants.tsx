@@ -1,7 +1,7 @@
 export abstract class Constants {
   static readonly PRESET_ARRAYS: {[key: string] : string[]} = {
-    "minimal": ["gameId", "participantId", "championId", "spell1Id", "spell2Id", "teamId", "lane"],
-    "advanced": ["participantId", "championId", "assists", "champLevel", "damageDealtToObjectives", 
+    "minimal": ["gameCreation", "gameDuration", "gameId", "participantId", "championId", "spell1Id", "spell2Id", "teamId", "lane"],
+    "advanced": ["gameCreation", "gameDuration", "gameId", "participantId", "championId", "assists", "champLevel", "damageDealtToObjectives", 
     "damageDealtToTurrets", "damageSelfMitigated", "deaths", "goldEarned", "goldSpent", "item0", 
     "item1", "item2", "item3", "item4", "item5", "item6", "kills", "magicDamageDealt", 
     "neutralMinionsKilled", "physicalDamageDealt", "timeCCingOthers", "totalDamageDealt", "totalHeal", 
@@ -53,4 +53,20 @@ export abstract class Constants {
     "queueId": false, 
     "seasonId": true
   }
+  static readonly ROLE_OPTIONS : any[] = [{
+    value: 'TOP',
+    label: 'TOP'
+  }, {
+    value: 'JUNGLE',
+    label: 'JUNGLE'
+  }, {
+    value: 'MIDDLE',
+    label: 'MIDDLE'
+  }, {
+    value: 'BOTTOM',
+    label: 'BOTTOM'
+  }, {
+    value: 'SUPPORT',
+    label: 'SUPPORT'
+  }]
 }
