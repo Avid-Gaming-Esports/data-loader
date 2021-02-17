@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Dispatch } from "redux";
 import { useDispatch } from "react-redux";
 import { InputGroup, FormControl, Modal, Image } from 'react-bootstrap';
@@ -8,6 +8,7 @@ import axios from 'axios';
 import { putGameID } from '../store/actionCreators';
 
 import { Constants } from './Constants';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import '../style/View.css';
 
@@ -26,10 +27,19 @@ var momentDurationFormatSetup = require("moment-duration-format");
 
 momentDurationFormatSetup(moment);
 
+interface SearchParams {
+  match: string,
+}
+
 function Search() {
   const dispatch: Dispatch<any> = useDispatch();
-  const [matchID, setMatchID] = useState(0);
+  const history = useHistory<SearchParams>();
+  const routeMatchID = useRouteMatch<SearchParams>("/:match");
+  const matchID = routeMatchID != null
+    ? parseInt(routeMatchID.params.match)
+    : null;
   const [showHelp, setShowHelp] = useState(false);
+  const [matchIDInput, setMatchIDInput] = useState((matchID ?? "").toString());
 
   const handleClose = () => setShowHelp(false);
   const handleShow = () => setShowHelp(true);
@@ -59,7 +69,7 @@ function Search() {
     mapTransform[mapsMap[mapNugget].mapId] = mapsMap[mapNugget].mapName + " " + mapsMap[mapNugget].notes
   }
 
-  let callApi = async () => {
+  let callApi = useCallback(async () => {
     axios.post("https://avid-alpha.wl.r.appspot.com/api", {
       gameID: matchID
     }).then((res) => {
@@ -73,18 +83,18 @@ function Search() {
         }
         for (let i = 0; i < 7; i++) {
           let itemString = key.stats["item"+i.toString()].toString()
-          key.stats["item"+i.toString()] = (itemKeys.includes(itemString)) ? 
+          key.stats["item"+i.toString()] = (itemKeys.includes(itemString)) ?
             itemMap[itemString].name : "";
-        } 
+        }
         key.spell1Id = ssTransform[key.spell1Id];
         key.spell2Id = ssTransform[key.spell2Id];
 
-        let reqTimeline : string[] = ["creepsPerMinDeltas", "xpPerMinDeltas", 
+        let reqTimeline : string[] = ["creepsPerMinDeltas", "xpPerMinDeltas",
         "goldPerMinDeltas", "csDiffPerMinDeltas", "xpDiffPerMinDeltas",
         "damageTakenPerMinDeltas", "damageTakenDiffPerMinDeltas"];
         for (let selector in reqTimeline) {
           let givenData = key.timeline[reqTimeline[selector]]
-          let keyWork = (givenData === undefined) ? ["0-10", "10-20", "20-30", "30-end"] : 
+          let keyWork = (givenData === undefined) ? ["0-10", "10-20", "20-30", "30-end"] :
             ["0-10", "10-20", "20-30", "30-end"].filter((val) => !Object.keys(givenData).includes(val))
           if (givenData === undefined) {
             key.timeline[reqTimeline[selector]] = { }
@@ -116,7 +126,7 @@ function Search() {
                 profileIcon: 3712,
                 accountId: "UNKNOWN",
                 matchHistoryUri: "UNKNOWN",
-                currentAccountId: "UNKNOWN", 
+                currentAccountId: "UNKNOWN",
                 currentPlatformId: "UNKNOWN",
                 summonerName: "Player " + entry.participantId.toString(),
                 summonerId: "UNKNOWN",
@@ -134,7 +144,7 @@ function Search() {
                 profileIcon: 3712,
                 accountId: "UNKNOWN",
                 matchHistoryUri: "UNKNOWN",
-                currentAccountId: "UNKNOWN", 
+                currentAccountId: "UNKNOWN",
                 currentPlatformId: "UNKNOWN",
                 summonerName: "Player " + entry.participantId.toString(),
                 summonerId: "UNKNOWN",
@@ -146,8 +156,8 @@ function Search() {
           }
         }
       })
-      
-      let md : Metadata = { 
+
+      let md : Metadata = {
         gameCreation: moment(res.data.gameCreation).format(),
         gameDuration: moment.duration(res.data.gameDuration, "seconds").format("h:mm:ss"),
         gameId: res.data.gameId,
@@ -159,7 +169,7 @@ function Search() {
         queueId: queueTransform[res.data.queueId],
         seasonId: res.data.seasonId,
       }
-      
+
       let redTeam = res.data.teams.filter((teamObj: any) => teamObj.teamId === 200)[0];
       let blueTeam = res.data.teams.filter((teamObj: any) => teamObj.teamId === 100)[0];
 
@@ -205,13 +215,26 @@ function Search() {
 
       dispatch(putGameID(toUpdate));
     });
-  };
+  }, [matchID]);
+
+  useEffect(() => {
+    if (matchID != null) {
+      callApi();
+      setMatchIDInput(matchID.toString());
+    }
+  }, [callApi, matchID, setMatchIDInput]);
+
+  const submitMatchID = useCallback((match: string) => {
+    history.push({
+      pathname: `/${match}`,
+    })
+  }, [history]);
 
   return (
     <div>
       <InputGroup className="mb-3 sb-1">
         <InputGroup.Prepend
-          onClick={() => callApi()}>
+          onClick={() => submitMatchID(matchIDInput)}>
           <InputGroup.Text className="lb-1"><FiSearch size={"1.2rem"}/></InputGroup.Text>
         </InputGroup.Prepend>
         <FormControl
@@ -222,12 +245,11 @@ function Search() {
           type="number"
           onKeyPress={(event: React.KeyboardEvent) => {
             if(event.key === "Enter") {
-              callApi()
+              submitMatchID(matchIDInput);
             }
           }}
-          onChange={(event) => {
-            setMatchID(parseInt(event.target.value));
-          }}
+          value={matchIDInput}
+          onChange={(event) => setMatchIDInput(event.target.value)}
         />
         <InputGroup.Append
           onClick={handleShow}>
