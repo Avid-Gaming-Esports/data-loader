@@ -45,13 +45,13 @@ export abstract class Constants {
     "gameCreation": false, 
     "gameDuration": false, 
     "gameId": false, 
-    "gameMode": true, 
-    "gameType": true, 
+    "gameMode": false, 
+    "gameType": false, 
     "gameVersion": false, 
     "mapId": false, 
     "platformId": false, 
     "queueId": false, 
-    "seasonId": true
+    "seasonId": false
   }
   static readonly ROLE_OPTIONS : any[] = [{
     value: 'TOP',

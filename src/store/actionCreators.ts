@@ -35,6 +35,13 @@ export function updateScreen(raw: gameState) {
   }
 }
 
+export function updateHelp(raw?: gameState) {
+  return {
+    type: actionTypes.UPDATE_HELP,
+    payload: raw
+  }
+}
+
 export function changePreset(raw: optState) {
   return {
     type: actionTypes.UPDATE_PRESET,

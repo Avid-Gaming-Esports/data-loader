@@ -194,7 +194,8 @@ const initialState: gameState = {
     win: true
   },
   raw: JSON.stringify(""),
-  onView: false
+  onView: false,
+  help: false
 }
 
 const reducer = (
@@ -245,6 +246,11 @@ const reducer = (
       return {
         ...state,
         onView: action.payload.onView,
+      }
+    case actionTypes.UPDATE_HELP:
+      return {
+        ...state,
+        help: action.payload.help,
       }
   }
   return state;

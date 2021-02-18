@@ -36,7 +36,7 @@ function Metadata() {
     <Card>
       <Accordion as={Card.Header}>
         <Card className="group-by">
-          Metadata
+          Game
           <Accordion.Toggle 
           as={Card} 
           eventKey="0" 

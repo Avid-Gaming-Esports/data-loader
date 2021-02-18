@@ -51,6 +51,35 @@ input[type=number] {
   text-align: center;
 }
 
+.help {
+  font-size: 0.7rem;
+  text-align: center;
+  color: #007bff;
+  width: max-content;
+  margin: auto;
+  margin-top: 1rem;
+}
+
+.help:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .game-id {
   font-family: 'Nunito Sans', sans-serif;
+}
+
+.modal-60w {
+  width: 60vw;
+  max-width: 60vw;
+  font-family: 'Nunito Sans', sans-serif;
+} 
+
+.modal-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  font-size: 1.4rem;
 }

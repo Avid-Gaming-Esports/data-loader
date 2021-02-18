@@ -26,6 +26,7 @@ type gameState = {
   blueTeam: TeamData,
   raw: string,
   onView?: boolean,
+  help?: boolean
 }
 
 type optState = {
@@ -58,6 +59,7 @@ type gameData = {
   blueTeam?: TeamData,
   raw?: object,
   onView?: boolean,
+  help?: boolean
 }
 
 type optData = {
