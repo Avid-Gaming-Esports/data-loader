@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 // import logo from './logo.svg';
+import { BrowserRouter as Router } from "react-router-dom";
 
 import './App.css';
 
@@ -9,9 +10,11 @@ function App() {
   useEffect(() => {
     document.title = "Data Loader"
   }, []);
-  
+
   return (
-    <View />
+    <Router>
+      <View />
+    </Router>
   );
 }
 
